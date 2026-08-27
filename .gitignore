@@ -1,0 +1,11 @@
+node_modules/
+www/
+android/
+.gradle/
+.idea/
+*.local
+local.properties
+app/build/
+build/
+capacitor.config.json
+package-lock.json

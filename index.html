@@ -21,6 +21,7 @@ body{font-family:'Poppins',sans-serif;background:var(--bg);background-image:radi
 .screen.active{display:flex;flex-direction:column;align-items:center;justify-content:flex-start;padding-bottom:12px;gap:0}
 #screen-dashboard::-webkit-scrollbar{display:none}
 #screen-dashboard{scrollbar-width:none}
+#screen-stats.active,#screen-history.active,#screen-achievements.active,#screen-tips.active,#screen-about.active,#screen-privacy.active,#screen-settings.active{justify-content:flex-start;padding-top:16px}
 @keyframes fadeIn{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
 @keyframes popIn{from{transform:scale(.85);opacity:0}to{transform:scale(1);opacity:1}}
 @keyframes slideDown{from{opacity:0;transform:translateY(-10px)}to{opacity:1;transform:translateY(0)}}
@@ -351,6 +352,58 @@ button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-vis
   .user-comments-wrap{margin:6px 0}
   .user-comment-item{font-size:11px;max-width:240px}
 }
+@media(max-width:360px){
+  .app-container{padding:8px 8px calc(var(--nav-height) + 6px)}
+  .hero-card{padding:16px 10px 12px}
+  .dash-card{padding:16px 10px;max-width:100%}
+  .hero-bubble-wrap{width:130px;height:155px}
+  .hero-stats .ml-current{font-size:24px}
+  .hero-stats .ml-remaining{font-size:12px}
+  .nav-item{padding:4px 2px;min-width:40px;font-size:9px}
+  .nav-item svg{width:18px;height:18px}
+  .stat-card{padding:8px 4px}
+  .stat-card .stat-value{font-size:14px}
+  .stat-card .stat-label{font-size:10px}
+  .onboarding-card{padding:20px 12px}
+  .onboarding-card h2{font-size:20px}
+  .onboarding-card p{font-size:12px}
+  .modal-card{padding:20px 12px 12px}
+  .modal-grid button{font-size:12px;padding:10px 4px}
+  .goal-display{width:100px;height:100px}
+  .goal-display .value{font-size:24px}
+  .achievement-card{padding:10px 6px}
+  .achievement-icon{font-size:20px}
+  .achievement-name{font-size:11px}
+  .achievement-desc{font-size:9px}
+  .meditation-illu.sm{height:45px}
+  .meditation-illu.md{height:65px}
+  .meditation-illu.lg{height:85px}
+  .chart-bar-wrap{height:100px}
+  .tips-list{gap:6px}
+  .tip-card{padding:10px 8px}
+  .tip-icon{font-size:18px}
+  .tip-text{font-size:12px}
+  .setting-item{padding:8px 0}
+  .setting-label{font-size:13px}
+  .back-btn{width:34px;height:34px}
+  .back-btn svg{width:16px;height:16px}
+  .btn-primary,.btn-secondary{padding:10px 16px;font-size:13px}
+  .export-btn{padding:8px 12px;font-size:12px}
+  .brand{font-size:20px}
+  .brand-sub{font-size:12px}
+}
+@media(max-height:640px){
+  .hero-card{padding:14px 10px 10px}
+  .hero-bubble-wrap{width:120px;height:140px}
+  .hero-stats .ml-current{font-size:22px}
+  .hero-stats .ml-remaining{font-size:11px}
+  .dash-card{padding:14px 10px;margin-bottom:10px}
+  .stat-card{padding:8px 4px}
+  .meditation-illu.md{height:55px}
+  .meditation-illu.lg{height:70px}
+  .nav-item{padding:4px 2px;min-width:40px}
+  .nav-item svg{width:18px;height:18px}
+}
 @media(min-width:600px) and (max-width:1023px){
   .hero-bubble-wrap{width:200px;height:230px}
 }
@@ -512,6 +565,7 @@ button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-vis
         <label>Daily Water Goal (Liters)</label>
         <input type="number" id="goalInput" value="3.0" min="0.5" max="15" step="0.1" oninput="updateGoalPreview(this.value)" inputmode="decimal">
         <p style="font-size:12px;color:var(--text-secondary);margin-top:6px">Suggested: <span id="suggestedGoal">3.0</span> L</p>
+        <p style="font-size:11px;color:var(--text-secondary);margin-top:2px">Based on your weight, age & gender</p>
       </div>
       <button class="btn-primary" onclick="finishGoal()">Next</button>
     </div>
@@ -991,8 +1045,8 @@ function init(){
 function signUp(){const email=document.getElementById('authEmail').value.trim();const pass=document.getElementById('authPassword').value;const errBox=document.getElementById('authError');errBox.textContent='';if(!email||!pass)return errBox.textContent='Please fill in both fields';if(pass.length<6)return errBox.textContent='Password must be at least 6 characters';auth.createUserWithEmailAndPassword(email,pass).then((cred)=>{currentUser=cred.user;loadUserData()}).catch((e)=>{errBox.textContent=e.message})}
 function logIn(){const email=document.getElementById('authEmail').value.trim();const pass=document.getElementById('authPassword').value;const errBox=document.getElementById('authError');errBox.textContent='';if(!email||!pass)return errBox.textContent='Please fill in both fields';auth.signInWithEmailAndPassword(email,pass).then((cred)=>{currentUser=cred.user;loadUserData()}).catch((e)=>{errBox.textContent=e.message})}
 function logOut(){auth.signOut().then(()=>{currentUser=null;showScreen('screen-login')})}
-function saveUserData(){if(!currentUser||!db)return;db.collection('users').doc(currentUser.uid).set({userName:state.userName,gender:state.gender,age:state.age,weight:state.weight,dailyGoal:state.dailyGoal,onboarded:state.onboarded},{merge:true})}
-function loadUserData(){if(!currentUser||!db)return;db.collection('users').doc(currentUser.uid).get().then((doc)=>{if(doc.exists){const d=doc.data();state.userName=d.userName||'';state.gender=d.gender||null;state.age=d.age||null;state.weight=d.weight||null;state.dailyGoal=d.dailyGoal||3000;state.onboarded=d.onboarded||false;if(state.onboarded){showScreen('screen-dashboard');renderAll();renderUserGreeting()}else{showScreen('screen-onboarding')}}else{showScreen('screen-onboarding')}})}
+function saveUserData(){if(!currentUser||!db)return;const history={};try{for(let i=0;i<localStorage.length;i++){const k=localStorage.key(i);if(k&&k.startsWith('bwatery_day_')){try{history[k]=JSON.parse(localStorage.getItem(k))}catch(e){}}}}catch(e){}const achievements=localStorage.getItem('bwatery_achievements')||'[]';const rating=localStorage.getItem('bwatery_rating')||'0';db.collection('users').doc(currentUser.uid).set({userName:state.userName,gender:state.gender,age:state.age,weight:state.weight,dailyGoal:state.dailyGoal,onboarded:state.onboarded,currentIntake:state.currentIntake,lastDate:state.lastDate,darkMode:state.darkMode,reminderInterval:state.reminderInterval,weatherBoost:state.weatherBoost,soundEnabled:state.soundEnabled,wakeTime:state.wakeTime,bedTime:state.bedTime,reminderMode:state.reminderMode,remindAfterGoal:state.remindAfterGoal,unit:state.unit,defaultCup:state.defaultCup,language:state.language,_weatherBoosted:state._weatherBoosted,history:history,achievements:JSON.parse(achievements),rating:parseInt(rating)},{merge:true})}
+function loadUserData(){if(!currentUser||!db)return;db.collection('users').doc(currentUser.uid).get().then((doc)=>{if(doc.exists){const d=doc.data();state.userName=d.userName||'';state.gender=d.gender||null;state.age=d.age||null;state.weight=d.weight||null;state.dailyGoal=d.dailyGoal||3000;state.onboarded=d.onboarded||false;state.currentIntake=d.currentIntake||0;state.lastDate=d.lastDate||null;state.darkMode=d.darkMode||false;state.reminderInterval=d.reminderInterval||30;state.weatherBoost=d.weatherBoost!==undefined?d.weatherBoost:true;state.soundEnabled=d.soundEnabled!==undefined?d.soundEnabled:true;state.wakeTime=d.wakeTime||'07:00';state.bedTime=d.bedTime||'23:00';state.reminderMode=d.reminderMode||'sound';state.remindAfterGoal=d.remindAfterGoal||false;state.unit=d.unit||'ml';state.defaultCup=d.defaultCup||250;state.language=d.language||'en';state._weatherBoosted=d._weatherBoosted||false;if(d.history){Object.keys(d.history).forEach(k=>{try{localStorage.setItem(k,JSON.stringify(d.history[k]))}catch(e){}})}if(d.achievements)try{localStorage.setItem('bwatery_achievements',JSON.stringify(d.achievements))}catch(e){}if(d.rating)try{localStorage.setItem('bwatery_rating',String(d.rating))}catch(e){}saveState();applyDarkMode();const g=document.getElementById('settingsGoal');if(g)g.value=(state.dailyGoal-(state._weatherBoosted?500:0))/1000;const r=document.getElementById('reminderInterval');if(r)r.value=state.reminderInterval;if(state.onboarded){showScreen('screen-dashboard');renderAll();fetchStats();fetchWeather();checkAchievements();renderUserGreeting();renderUserComments();if(state.reminderInterval>0)startReminderTimer()}else{showScreen('screen-onboarding')}}else{showScreen('screen-onboarding')}}).catch(()=>{if(state.onboarded){showScreen('screen-dashboard');renderAll();renderUserGreeting()}else{showScreen('screen-onboarding')}})}
 
 function loadState(){
   try{const s=localStorage.getItem('bwatery_state');if(s)Object.assign(state,JSON.parse(s))}catch(e){}
@@ -1043,9 +1097,9 @@ function fetchStats(){
 }
 
 function selectGender(btn){document.querySelectorAll('.gender-btn').forEach(b=>b.classList.remove('selected'));btn.classList.add('selected');state.gender=btn.dataset.gender}
-function goToSetGoal(){const n=document.getElementById('onboardName').value.trim();const a=parseInt(document.getElementById('ageInput').value);const w=parseFloat(document.getElementById('weightInput').value);const wake=document.getElementById('wakeTimeInput').value||'07:00';const bed=document.getElementById('bedTimeInput').value||'23:00';if(!n)return alert('Please enter your name');if(!state.gender)return alert('Please select your gender');if(!a||a<1)return alert('Please enter a valid age');if(!w||w<10)return alert('Please enter a valid weight');state.userName=n;state.age=a;state.weight=w;state.wakeTime=wake;state.bedTime=bed;let s=(w*33)/1000;if(s<1.5)s=1.5;if(s>6)s=6;s=Math.round(s*10)/10;document.getElementById('goalInput').value=s;updateGoalPreview(s);showScreen('screen-setgoal')}
+function goToSetGoal(){const n=document.getElementById('onboardName').value.trim();const a=parseInt(document.getElementById('ageInput').value);const w=parseFloat(document.getElementById('weightInput').value);const wake=document.getElementById('wakeTimeInput').value||'07:00';const bed=document.getElementById('bedTimeInput').value||'23:00';if(!n)return alert('Please enter your name');if(!state.gender)return alert('Please select your gender');if(!a||a<1)return alert('Please enter a valid age');if(!w||w<10)return alert('Please enter a valid weight');state.userName=n;state.age=a;state.weight=w;state.wakeTime=wake;state.bedTime=bed;let mlPerKg=35;if(state.gender==='male')mlPerKg=38;if(a>60)mlPerKg=30;if(a<18)mlPerKg=40;if(w>90)mlPerKg+=3;let s=(w*mlPerKg)/1000;if(s<1.5)s=1.5;if(s>8)s=8;s=Math.round(s*10)/10;document.getElementById('goalInput').value=s;document.getElementById('suggestedGoal').textContent=s.toFixed(1);updateGoalPreview(s);showScreen('screen-setgoal')}
 function updateGoalPreview(v){const n=parseFloat(v);if(!isNaN(n)&&n>0)document.getElementById('goalDisplayValue').textContent=n.toFixed(1)}
-function finishGoal(){let g=Math.round(parseFloat(document.getElementById('goalInput').value)*1000);if(!g||g<500)g=Math.round(state.weight*33);state.dailyGoal=g;state.onboarded=true;saveState();saveToday();showLoadingScreen();saveUserData()}
+function finishGoal(){let g=Math.round(parseFloat(document.getElementById('goalInput').value)*1000);if(!g||g<500){let mlPerKg=35;if(state.gender==='male')mlPerKg=38;if(state.age>60)mlPerKg=30;if(state.age<18)mlPerKg=40;if(state.weight>90)mlPerKg+=3;g=Math.round(state.weight*mlPerKg)}state.dailyGoal=g;state.onboarded=true;saveState();saveToday();showLoadingScreen();saveUserData()}
 function showLoadingScreen(){const load=document.getElementById('loadingScreen');if(!load){showScreen('screen-dashboard');renderAll();startReminderTimer();fetchWeather();checkAchievements();renderUserGreeting();return}load.classList.add('active');const steps=load.querySelector('.loading-steps');const msgs=['Analyzing your profile...','Calculating your ideal goal...','Setting up reminders...','Almost ready...'];let i=0;const stepTimer=setInterval(()=>{i++;if(i<msgs.length&&steps)steps.innerHTML='<span>'+msgs[i]+'</span>'},750);setTimeout(()=>{clearInterval(stepTimer);load.classList.remove('active');showScreen('screen-dashboard');renderAll();startReminderTimer();fetchWeather();checkAchievements();renderUserGreeting()},3000)}
 
 function addWater(ml){state.currentIntake=Math.min(state.currentIntake+ml,state.dailyGoal);closeAddModal();saveToday();saveState();renderAll();checkAchievements();splashEffect();saveUserData()}
@@ -1054,7 +1108,7 @@ function splashEffect(){const w=document.querySelector('.hero-bubble-wrap');if(!
 function customAdd(){const v=document.getElementById('customWaterInput').value;const n=parseInt(v);if(!n||n<=0)return alert('Enter a valid amount');addWater(n);document.getElementById('customWaterInput').value=''}
 function showAddModal(){document.getElementById('addWaterModal').classList.add('active')}
 function closeAddModal(){document.getElementById('addWaterModal').classList.remove('active')}
-function resetGoal(){if(!confirm("Reset today's intake to 0?"))return;state.currentIntake=0;saveToday();saveState();renderAll()}
+function resetGoal(){if(!confirm("Reset today's intake to 0?"))return;state.currentIntake=0;saveToday();saveState();renderAll();saveUserData()}
 
 function fmtL(ml){if(state.unit==='oz'){const oz=Math.round(ml/29.5735*10)/10;return oz+' oz'}const l=ml/1000;return(Math.round(l*100)/100).toString().replace(/\.0$/,'')+' L'}
 function renderAll(){
@@ -1103,35 +1157,35 @@ function calcStreak(){const h=getHistoryData();let s=0;for(let i=h.length-1;i>=0
 function getGoalsMetCount(){return getAllTimeData().filter(d=>d.met).length}
 function getTotalDaysWithIntake(){return getAllTimeData().filter(d=>d.intake>0).length}
 function getTotalIntake(){return getAllTimeData().reduce((s,d)=>s+d.intake,0)}
-function checkAchievements(){let u=[];try{u=JSON.parse(localStorage.getItem('bwatery_achievements')||'[]')}catch(e){}let n=false;ACHIEVEMENTS.forEach(a=>{if(!u.includes(a.id)&&a.check()){u.push(a.id);n=true}});try{localStorage.setItem('bwatery_achievements',JSON.stringify(u))}catch(e){}if(n)renderAchievements()}
+function checkAchievements(){let u=[];try{u=JSON.parse(localStorage.getItem('bwatery_achievements')||'[]')}catch(e){}let n=false;ACHIEVEMENTS.forEach(a=>{if(!u.includes(a.id)&&a.check()){u.push(a.id);n=true}});try{localStorage.setItem('bwatery_achievements',JSON.stringify(u))}catch(e){}if(n){renderAchievements();saveUserData()}}
 function renderAchievements(){const g=document.getElementById('achievementsGrid');if(!g)return;g.innerHTML='';let u=[];try{u=JSON.parse(localStorage.getItem('bwatery_achievements')||'[]')}catch(e){}ACHIEVEMENTS.forEach(a=>{const c=document.createElement('div');c.className='achievement-card '+(u.includes(a.id)?'unlocked':'locked');c.innerHTML='<div class="achievement-icon">'+a.icon+'</div><div class="achievement-name">'+a.name+'</div><div class="achievement-desc">'+a.desc+'</div>';g.appendChild(c)})}
 
 let weatherRetries=0;
 async function fetchWeather(){const badge=document.getElementById('tempBadge');if(!badge)return;try{const c=new AbortController();const t=setTimeout(()=>c.abort(),8000);const r=await fetch('https://api.open-meteo.com/v1/forecast?latitude=7.2083&longitude=79.8358&current_weather=true&timezone=auto',{signal:c.signal});clearTimeout(t);const data=await r.json();const temp=data.current_weather.temperature;badge.innerHTML='🌤 '+Math.round(temp)+'°C';weatherRetries=0;
-  if(state.weatherBoost&&temp>30){if(!state._weatherBoosted){state.dailyGoal+=500;state._weatherBoosted=true;const g=document.getElementById('settingsGoal');if(g)g.value=(state.dailyGoal-500)/1000;saveToday();saveState();renderAll()}document.getElementById('weatherBanner').classList.add('show')}
-  else{document.getElementById('weatherBanner').classList.remove('show');if(state._weatherBoosted){state.dailyGoal-=500;state._weatherBoosted=false;const g=document.getElementById('settingsGoal');if(g)g.value=state.dailyGoal/1000;if(state.currentIntake>state.dailyGoal)state.currentIntake=state.dailyGoal;saveToday();saveState();renderAll()}}}catch(e){if(weatherRetries<2){weatherRetries++;setTimeout(fetchWeather,3000)}else badge.innerHTML='🌤 --°C'}}
-function toggleWeatherBoost(){state.weatherBoost=!state.weatherBoost;document.getElementById('weatherToggle').classList.toggle('on',state.weatherBoost);saveState();if(state._weatherBoosted){state.dailyGoal-=500;state._weatherBoosted=false;const g=document.getElementById('settingsGoal');if(g)g.value=state.dailyGoal/1000;if(state.currentIntake>state.dailyGoal)state.currentIntake=state.dailyGoal;saveToday();saveState();renderAll()}document.getElementById('weatherBanner').classList.remove('show');if(state.weatherBoost)fetchWeather()}
+  if(state.weatherBoost&&temp>30){if(!state._weatherBoosted){state.dailyGoal+=500;state._weatherBoosted=true;const g=document.getElementById('settingsGoal');if(g)g.value=(state.dailyGoal-500)/1000;saveToday();saveState();renderAll();saveUserData()}document.getElementById('weatherBanner').classList.add('show')}
+  else{document.getElementById('weatherBanner').classList.remove('show');if(state._weatherBoosted){state.dailyGoal-=500;state._weatherBoosted=false;const g=document.getElementById('settingsGoal');if(g)g.value=state.dailyGoal/1000;if(state.currentIntake>state.dailyGoal)state.currentIntake=state.dailyGoal;saveToday();saveState();renderAll();saveUserData()}}}catch(e){if(weatherRetries<2){weatherRetries++;setTimeout(fetchWeather,3000)}else badge.innerHTML='🌤 --°C'}}
+function toggleWeatherBoost(){state.weatherBoost=!state.weatherBoost;document.getElementById('weatherToggle').classList.toggle('on',state.weatherBoost);saveState();if(state._weatherBoosted){state.dailyGoal-=500;state._weatherBoosted=false;const g=document.getElementById('settingsGoal');if(g)g.value=state.dailyGoal/1000;if(state.currentIntake>state.dailyGoal)state.currentIntake=state.dailyGoal;saveToday();saveState();renderAll()}document.getElementById('weatherBanner').classList.remove('show');if(state.weatherBoost)fetchWeather();saveUserData()}
 
-function toggleDarkMode(){state.darkMode=!state.darkMode;applyDarkMode();saveState()}
+function toggleDarkMode(){state.darkMode=!state.darkMode;applyDarkMode();saveState();saveUserData()}
 function applyDarkMode(){document.documentElement.classList.toggle('dark-mode',state.darkMode);const t=document.getElementById('darkToggle');if(t)t.classList.toggle('on',state.darkMode)}
 
 function updateGoal(val){const n=Math.round(parseFloat(val)*1000);if(n>=500){state.dailyGoal=state._weatherBoosted?n+500:n;if(state.currentIntake>state.dailyGoal)state.currentIntake=state.dailyGoal;saveToday();saveState();renderAll();saveUserData()}}
-function updateReminder(val){state.reminderInterval=parseInt(val);saveState();if(state.reminderTimer)clearInterval(state.reminderTimer);if(state.reminderInterval>0)startReminderTimer()}
+function updateReminder(val){state.reminderInterval=parseInt(val);saveState();if(state.reminderTimer)clearInterval(state.reminderTimer);if(state.reminderInterval>0)startReminderTimer();saveUserData()}
 function requestNotifyPermission(){if('Notification' in window&&Notification.permission==='default')Notification.requestPermission()}
 function startReminderTimer(){if(state.reminderTimer)clearInterval(state.reminderTimer);if(state.reminderMode==='off')return;requestNotifyPermission();state.reminderTimer=setInterval(()=>{const pct=state.currentIntake/state.dailyGoal;const now=new Date();const h=now.getHours(),m=now.getMinutes();const currentTime=h*60+m;const [wH,wM]=(state.wakeTime||'07:00').split(':').map(Number);const [bH,bM]=(state.bedTime||'23:00').split(':').map(Number);const wakeMin=wH*60+wM;const bedMin=bH*60+bM;const isAwake=bedMin>wakeMin?(currentTime>=wakeMin&&currentTime<=bedMin):(currentTime>=wakeMin||currentTime<=bedMin);const exp=Math.min(.85,(currentTime/(24*60))*1.2);if(isAwake&&(pct<exp||state.remindAfterGoal)){if(state.reminderMode==='sound'||state.reminderMode==='soundOnly')playWaterDrop();if(state.reminderMode==='vibrate'&&navigator.vibrate)navigator.vibrate(200);if(state.reminderMode==='sound'&&navigator.vibrate)navigator.vibrate(200);const p=document.getElementById('reminderPopup');if(p&&!p.classList.contains('active'))p.classList.add('active');if(state.reminderMode!=='display'&&state.reminderMode!=='off'&&'Notification' in window&&Notification.permission==='granted')new Notification('💧 Time to Drink!',{body:'You\'re behind on your goal. ('+fmtL(state.currentIntake)+' / '+fmtL(state.dailyGoal)+')'})}},state.reminderInterval*60*1000)}
 function dismissReminder(){const p=document.getElementById('reminderPopup');if(p)p.classList.remove('active')}
 
-function setRating(n){const stars=document.querySelectorAll('.rate-star');stars.forEach((s,i)=>s.classList.toggle('filled',i<n));try{localStorage.setItem('bwatery_rating',n)}catch(e){}const t=document.getElementById('rateText');const msgs=['','We\'ll do better!','Not bad!','Good!','Great!','Amazing! 🎉'];if(t)t.textContent=msgs[n]||'Tap to rate'}
+function setRating(n){const stars=document.querySelectorAll('.rate-star');stars.forEach((s,i)=>s.classList.toggle('filled',i<n));try{localStorage.setItem('bwatery_rating',n)}catch(e){}const t=document.getElementById('rateText');const msgs=['','We\'ll do better!','Not bad!','Good!','Great!','Amazing! 🎉'];if(t)t.textContent=msgs[n]||'Tap to rate';saveUserData()}
 function loadRating(){try{const r=parseInt(localStorage.getItem('bwatery_rating'));if(r&&r>=1&&r<=5)setRating(r)}catch(e){}}
 
 function playWaterDrop(){try{const ctx=new(window.AudioContext||window.webkitAudioContext)();const o=ctx.createOscillator();const g=ctx.createGain();o.connect(g);g.connect(ctx.destination);o.type='sine';o.frequency.setValueAtTime(800,ctx.currentTime);o.frequency.exponentialRampToValueAtTime(400,ctx.currentTime+.15);g.gain.setValueAtTime(.3,ctx.currentTime);g.gain.exponentialRampToValueAtTime(.001,ctx.currentTime+.25);o.start(ctx.currentTime);o.stop(ctx.currentTime+.25);setTimeout(()=>ctx.close(),500)}catch(e){}}
 function toggleSound(){state.soundEnabled=!state.soundEnabled;document.getElementById('soundToggle').classList.toggle('on',state.soundEnabled);saveState()}
-function updateReminderMode(val){state.reminderMode=val;saveState();if(state.reminderTimer){clearInterval(state.reminderTimer);if(state.reminderInterval>0)startReminderTimer()}}
-function toggleRemindAfterGoal(){state.remindAfterGoal=!state.remindAfterGoal;document.getElementById('remindAfterGoalToggle').classList.toggle('on',state.remindAfterGoal);saveState()}
-function updateWakeTime(val){state.wakeTime=val;saveState()}
-function updateBedTime(val){state.bedTime=val;saveState()}
-function updateUnit(val){state.unit=val;saveState();renderAll();fetchStats()}
-function updateLanguage(val){state.language=val;saveState()}
+function updateReminderMode(val){state.reminderMode=val;saveState();if(state.reminderTimer){clearInterval(state.reminderTimer);if(state.reminderInterval>0)startReminderTimer()}saveUserData()}
+function toggleRemindAfterGoal(){state.remindAfterGoal=!state.remindAfterGoal;document.getElementById('remindAfterGoalToggle').classList.toggle('on',state.remindAfterGoal);saveState();saveUserData()}
+function updateWakeTime(val){state.wakeTime=val;saveState();saveUserData()}
+function updateBedTime(val){state.bedTime=val;saveState();saveUserData()}
+function updateUnit(val){state.unit=val;saveState();renderAll();fetchStats();saveUserData()}
+function updateLanguage(val){state.language=val;saveState();saveUserData()}
 
 function submitSuggestion(){const name=document.getElementById('suggestionName').value.trim();const comment=document.getElementById('suggestionComment').value.trim();if(!name)return alert('Please enter your name (required)');if(!comment)return alert('Please write your suggestion');const entry={name:name,text:comment,date:getToday(),timestamp:Date.now()};if(db){db.collection('feedback').add(entry).then(()=>{document.getElementById('suggestionName').value='';document.getElementById('suggestionComment').value='';renderUserComments();alert('Thank you for your feedback, '+name+'!')}).catch(e=>{console.error('Firestore write failed:',e);saveToLocal(entry);document.getElementById('suggestionName').value='';document.getElementById('suggestionComment').value='';renderUserComments();alert('Thank you for your feedback, '+name+'! (saved offline)')})}else{saveToLocal(entry);document.getElementById('suggestionName').value='';document.getElementById('suggestionComment').value='';renderUserComments();alert('Thank you for your feedback, '+name+'!')}}
 function saveToLocal(entry){let suggestions=[];try{suggestions=JSON.parse(localStorage.getItem('bwatery_suggestions')||'[]')}catch(e){}suggestions.unshift(entry);if(suggestions.length>50)suggestions=suggestions.slice(0,50);try{localStorage.setItem('bwatery_suggestions',JSON.stringify(suggestions))}catch(e){}}
