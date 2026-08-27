@@ -5,6 +5,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>BWATERY - Water Intake Tracker</title>
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Fredoka:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{--bg:#EAF6FF;--card-bg:rgba(255,255,255,.65);--surface-1:#DFF1FB;--primary:#2E9CCA;--primary-light:#5FC9E8;--primary-dark:#1D7A9E;--text:#1A3A4A;--text-secondary:#4A7A8A;--text-muted:#8AB4C4;--shadow:0 8px 32px rgba(46,156,202,.12);--border:rgba(46,156,202,.15);--radius:24px;--radius-sm:16px;--radius-xs:12px;--nav-height:68px;--danger:#FF6B6B;--success:#00B894;--warning:#FDCB6E;--transition:.3s cubic-bezier(.4,0,.2,1)}
@@ -369,6 +371,10 @@ button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-vis
       <h2 class="brand">BWATERY</h2>
       <p class="brand-sub">Stay hydrated, stay healthy</p>
       <div class="form-group">
+        <label>Your Name</label>
+        <input type="text" id="onboardName" placeholder="Enter your name">
+      </div>
+      <div class="form-group">
         <label>Your Gender</label>
         <div class="gender-group">
           <button class="gender-btn" data-gender="male" onclick="selectGender(this)">♂ Male</button>
@@ -399,54 +405,6 @@ button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-vis
         <p style="font-size:12px;color:var(--text-secondary);margin-top:6px">Suggested: <span id="suggestedGoal">3.0</span> L</p>
       </div>
       <button class="btn-primary" onclick="finishGoal()">Next</button>
-    </div>
-  </div>
-
-  <!-- LOGIN -->
-  <div class="screen" id="screen-login">
-    <button class="back-btn" onclick="goBack()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg></button>
-    <div class="onboarding-card">
-      <div class="meditation-wrap"><img src="meditation.svg" alt="" class="meditation-illu sm"></div>
-      <h2 class="brand" style="margin-bottom:8px">Welcome Back</h2>
-      <p class="brand-sub" style="margin-bottom:20px">Log in to track your hydration</p>
-      <div class="form-group">
-        <label>Email</label>
-        <input type="email" id="loginEmail" placeholder="you@example.com" inputmode="email">
-      </div>
-      <div class="form-group">
-        <label>Password</label>
-        <input type="password" id="loginPassword" placeholder="Enter your password">
-      </div>
-      <button class="btn-primary" onclick="doLogin()" style="margin-bottom:12px">Log in</button>
-      <p style="text-align:center;font-size:14px;color:var(--text-secondary)">
-        Don't have an account? <button class="link-btn" onclick="showScreen('screen-signup')">Sign up</button>
-      </p>
-    </div>
-  </div>
-
-  <!-- SIGN UP -->
-  <div class="screen" id="screen-signup">
-    <button class="back-btn" onclick="goBack()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg></button>
-    <div class="onboarding-card">
-      <div class="meditation-wrap"><img src="meditation.svg" alt="" class="meditation-illu sm"></div>
-      <h2 class="brand" style="margin-bottom:8px">Create Account</h2>
-      <p class="brand-sub" style="margin-bottom:20px">Start your hydration journey</p>
-      <div class="form-group">
-        <label>Name</label>
-        <input type="text" id="signupName" placeholder="Your name">
-      </div>
-      <div class="form-group">
-        <label>Email</label>
-        <input type="email" id="signupEmail" placeholder="you@example.com" inputmode="email">
-      </div>
-      <div class="form-group">
-        <label>Password</label>
-        <input type="password" id="signupPassword" placeholder="Create a password">
-      </div>
-      <button class="btn-primary" onclick="doSignup()" style="margin-bottom:12px">Sign up</button>
-      <p style="text-align:center;font-size:14px;color:var(--text-secondary)">
-        Already have an account? <button class="link-btn" onclick="showScreen('screen-login')">Log in</button>
-      </p>
     </div>
   </div>
 
@@ -591,6 +549,7 @@ button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-vis
           <li>Better focus, energy, and skin health</li>
           <li>Stops forgetting to drink water</li>
           <li>Works fully offline — no account needed</li>
+          <li>No sign up required — everything saved on your device</li>
           <li>Simple, distraction-free, and fun</li>
         </ul>
       </div>
@@ -700,15 +659,19 @@ button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-vis
         </div>
       </div>
       <div class="setting-section-title">User Experiences</div>
+      <div style="display:flex;justify-content:flex-end;margin-bottom:6px;gap:6px">
+        <button style="padding:4px 10px;border-radius:8px;border:1px solid var(--border);background:var(--surface-1);color:var(--text-secondary);font-family:inherit;font-size:11px;cursor:pointer;min-height:28px" onclick="exportFeedback()">📥 Export</button>
+      </div>
       <div class="user-comments-wrap" id="userCommentsWrap">
         <div class="user-comments-inner" id="userCommentsInner">
           <div class="user-comments-empty">No experiences yet. Be the first to share!</div>
         </div>
       </div>
-      <div class="setting-section-title">Account</div>
+      <div id="feedbackManageList" style="width:100%;max-width:440px;margin-top:8px;display:flex;flex-direction:column;gap:6px"></div>
+      <div class="setting-section-title">Data</div>
       <div class="setting-item" style="border:none">
-        <span class="setting-label">Logout<small>Sign out of your account</small></span>
-        <button class="btn-danger" style="max-width:100px;padding:8px 16px;border-radius:12px;font-size:13px;min-height:36px" onclick="doLogout()">🚪 Logout</button>
+        <span class="setting-label">Clear All Data<small>Reset everything and start fresh</small></span>
+        <button class="btn-danger" style="max-width:100px;padding:8px 16px;border-radius:12px;font-size:13px;min-height:36px" onclick="clearAllData()">🗑 Clear</button>
       </div>
       <div class="footer-dev">
         <div class="dev-name">N.S. Yashodya Rathnayaka</div>
@@ -787,7 +750,30 @@ button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-vis
 </div>
 
 <script>
-const state={gender:null,age:null,dailyGoal:3000,currentIntake:0,darkMode:false,reminderInterval:30,reminderTimer:null,weatherBoost:true,lastDate:null,_weatherBoosted:false,onboarded:false,loggedIn:false,userName:'',email:'',soundEnabled:true};
+// ===== FIREBASE CONFIG =====
+// Replace with your own Firebase project config
+// 1. Go to https://console.firebase.google.com
+// 2. Create a project (or use existing)
+// 3. Enable Firestore Database (start in test mode)
+// 4. Go to Project Settings > General > Your apps > Add web app
+// 5. Copy the config object and paste below
+const firebaseConfig = {
+  apiKey: "AIzaSyBW-hTg59_vyPfzrSk8X0AtaHMGofwTKRQ",
+  authDomain: "bwatery-6e79f.firebaseapp.com",
+  projectId: "bwatery-6e79f",
+  storageBucket: "bwatery-6e79f.firebasestorage.app",
+  messagingSenderId: "1068107231462",
+  appId: "1:1068107231462:web:1166cb678385aaac8ccb27"
+};
+let db = null;
+try {
+  firebase.initializeApp(firebaseConfig);
+  db = firebase.firestore();
+} catch(e) {
+  console.warn('Firebase init failed, using localStorage fallback:', e);
+}
+
+const state={gender:null,age:null,dailyGoal:3000,currentIntake:0,darkMode:false,reminderInterval:30,reminderTimer:null,weatherBoost:true,lastDate:null,_weatherBoosted:false,onboarded:false,userName:'',soundEnabled:true};
 const BUBBLE_TOP=85,BUBBLE_BOTTOM=270,BUBBLE_RANGE=BUBBLE_BOTTOM-BUBBLE_TOP;
 const ACHIEVEMENTS=[
   {id:'first_sip',name:'First Sip',desc:'Log your first water',icon:'💧',check:()=>getTotalDaysWithIntake()>=1},
@@ -804,16 +790,14 @@ function init(){
   setTimeout(()=>{document.getElementById('splash').classList.add('hide');setTimeout(()=>{document.getElementById('splash').style.display='none'},600)},2000);
   loadState();applyDarkMode();
   const st=document.getElementById('soundToggle');if(st)st.classList.toggle('on',state.soundEnabled);
-  if(state.onboarded&&state.loggedIn){
+  if(state.onboarded){
     showScreen('screen-dashboard');
     renderAll();fetchStats();fetchWeather();checkAchievements();
-  }else if(state.onboarded){
-    showScreen('screen-login');
   }else{
     showScreen('screen-onboarding');
   }
   checkMidnightReset();setInterval(checkMidnightReset,60000);
-  if(state.reminderInterval>0&&state.loggedIn)startReminderTimer();
+  if(state.reminderInterval>0&&state.onboarded)startReminderTimer();
   loadRating();screenHistory=['screen-dashboard'];
   try{history.replaceState({screen:'screen-dashboard'},'',location.href)}catch(e){}
   renderUserGreeting();renderUserComments();
@@ -836,7 +820,7 @@ function hideAllScreens(){document.querySelectorAll('.screen').forEach(s=>s.clas
 function activateNav(id){document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));const i=document.querySelector('.nav-item[data-screen="'+id+'"]');if(i)i.classList.add('active')}
 
 const navScreens=['screen-dashboard','screen-stats','screen-history','screen-achievements','screen-settings','screen-tips','screen-about'];
-const noBackScreens=['screen-dashboard','screen-splash','screen-onboarding','screen-login','screen-signup','screen-setgoal'];
+const noBackScreens=['screen-dashboard','screen-splash','screen-onboarding','screen-setgoal'];
 let screenHistory=[];
 function showScreen(id,skipPush){
   hideAllScreens();document.getElementById(id).classList.add('active');activateNav(id);
@@ -862,15 +846,12 @@ function fetchStats(){
 }
 
 function selectGender(btn){document.querySelectorAll('.gender-btn').forEach(b=>b.classList.remove('selected'));btn.classList.add('selected');state.gender=btn.dataset.gender;const s=state.gender==='male'?3.0:2.2;document.getElementById('suggestedGoal').textContent=s;document.getElementById('goalInput').value=s;updateGoalPreview(s)}
-function goToSetGoal(){const a=parseInt(document.getElementById('ageInput').value);if(!state.gender)return alert('Please select your gender');if(!a||a<1)return alert('Please enter a valid age');state.age=a;const s=state.gender==='male'?3.0:2.2;document.getElementById('goalInput').value=s;updateGoalPreview(s);showScreen('screen-setgoal')}
+function goToSetGoal(){const n=document.getElementById('onboardName').value.trim();const a=parseInt(document.getElementById('ageInput').value);if(!n)return alert('Please enter your name');if(!state.gender)return alert('Please select your gender');if(!a||a<1)return alert('Please enter a valid age');state.userName=n;state.age=a;const s=state.gender==='male'?3.0:2.2;document.getElementById('goalInput').value=s;updateGoalPreview(s);showScreen('screen-setgoal')}
 function updateGoalPreview(v){const n=parseFloat(v);if(!isNaN(n)&&n>0)document.getElementById('goalDisplayValue').textContent=n.toFixed(1)}
-function finishGoal(){let g=Math.round(parseFloat(document.getElementById('goalInput').value)*1000);if(!g||g<500)g=state.gender==='male'?3000:2200;state.dailyGoal=g;state.onboarded=true;saveState();saveToday();showScreen('screen-login')}
-
-function doLogin(){const e=document.getElementById('loginEmail').value.trim(),p=document.getElementById('loginPassword').value;if(!e)return alert('Please enter your email');if(!p)return alert('Please enter your password');state.email=e;state.loggedIn=true;saveState();showScreen('screen-dashboard');renderAll();startReminderTimer();fetchWeather()}
-function doSignup(){const n=document.getElementById('signupName').value.trim(),e=document.getElementById('signupEmail').value.trim(),p=document.getElementById('signupPassword').value;if(!n)return alert('Please enter your name');if(!e)return alert('Please enter your email');if(!p)return alert('Please create a password');state.userName=n;state.email=e;state.loggedIn=true;saveState();showScreen('screen-dashboard');renderAll();startReminderTimer();fetchWeather()}
-function doLogout(){if(!confirm('Are you sure you want to logout?'))return;state.loggedIn=false;state.reminderTimer&&clearInterval(state.reminderTimer);saveState();showScreen('screen-login')}
+function finishGoal(){let g=Math.round(parseFloat(document.getElementById('goalInput').value)*1000);if(!g||g<500)g=state.gender==='male'?3000:2200;state.dailyGoal=g;state.onboarded=true;saveState();saveToday();showScreen('screen-dashboard');renderAll();startReminderTimer();fetchWeather();checkAchievements();renderUserGreeting()}
 
 function addWater(ml){state.currentIntake=Math.min(state.currentIntake+ml,state.dailyGoal);closeAddModal();saveToday();saveState();renderAll();checkAchievements();splashEffect()}
+function clearAllData(){if(!confirm('This will delete ALL your data (history, settings, achievements). Continue?'))return;try{Object.keys(localStorage).forEach(k=>{if(k.startsWith('bwatery_'))localStorage.removeItem(k)})}catch(e){}state.gender=null;state.age=null;state.dailyGoal=3000;state.currentIntake=0;state.darkMode=false;state.reminderInterval=30;state.weatherBoost=true;state.lastDate=null;state._weatherBoosted=false;state.onboarded=false;state.userName='';state.soundEnabled=true;saveState();applyDarkMode();showScreen('screen-onboarding')}
 function splashEffect(){const w=document.querySelector('.hero-bubble-wrap');if(!w)return;const r=document.createElement('div');r.style.cssText='position:absolute;top:50%;left:50%;width:20px;height:20px;border:3px solid var(--primary-light);border-radius:50%;transform:translate(-50%,-50%);opacity:.8;pointer-events:none;animation:rippleOut .6s ease-out forwards;z-index:10';w.appendChild(r);setTimeout(()=>r.remove(),650)}
 function customAdd(){const v=document.getElementById('customWaterInput').value;const n=parseInt(v);if(!n||n<=0)return alert('Enter a valid amount');addWater(n);document.getElementById('customWaterInput').value=''}
 function showAddModal(){document.getElementById('addWaterModal').classList.add('active')}
@@ -914,6 +895,9 @@ function renderHistory(){
 }
 
 function exportCSV(){const today=new Date();let csv='Date,MlLogged,GoalMl,GoalMet\n';for(let i=30;i>=1;i--){const d=new Date(today);d.setDate(d.getDate()-i);const ds=toDateStr(d);let intake=0,goal=3000;const data=localStorage.getItem('bwatery_day_'+ds);if(data)try{const p=JSON.parse(data);intake=p.intake||0;goal=p.goal||3000}catch(e){}csv+=ds+','+intake+','+goal+','+(intake>=goal?'Yes':'No')+'\n'}const blob=new Blob([csv],{type:'text/csv'});const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download='bwatery_history.csv';document.body.appendChild(a);a.click();document.body.removeChild(a);URL.revokeObjectURL(url)}
+function exportFeedback(){if(db){db.collection('feedback').orderBy('timestamp','desc').get().then(snap=>{const items=[];snap.forEach(doc=>items.push(doc.data()));if(!items.length)return alert('No experiences to export');let csv='Name,Experience,Date\n';items.forEach(s=>{csv+='"'+s.name.replace(/"/g,'""')+'","'+s.text.replace(/"/g,'""')+'",'+s.date+'\n'});downloadCsv(csv,'bwatery_feedback.csv')}).catch(()=>{exportFeedbackLocal()})}else{exportFeedbackLocal()}}
+function exportFeedbackLocal(){let suggestions=[];try{suggestions=JSON.parse(localStorage.getItem('bwatery_suggestions')||'[]')}catch(e){}if(!suggestions.length)return alert('No experiences to export');let csv='Name,Experience,Date\n';suggestions.forEach(s=>{csv+='"'+s.name.replace(/"/g,'""')+'","'+s.text.replace(/"/g,'""')+'",'+s.date+'\n'});downloadCsv(csv,'bwatery_feedback.csv')}
+function downloadCsv(csv,filename){const blob=new Blob([csv],{type:'text/csv'});const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download=filename;document.body.appendChild(a);a.click();document.body.removeChild(a);URL.revokeObjectURL(url)}
 
 function getHistoryData(){const data=[];for(let i=30;i>=0;i--){const d=new Date();d.setDate(d.getDate()-i);const ds=toDateStr(d);let intake=0,goal=state.dailyGoal;const s=localStorage.getItem('bwatery_day_'+ds);if(s)try{const p=JSON.parse(s);intake=p.intake||0;goal=p.goal||goal}catch(e){}if(ds===getToday())intake=state.currentIntake;data.push({date:ds,intake,goal,met:intake>=goal})}return data}
 function getAllTimeData(){const data=[];try{for(let i=0;i<localStorage.length;i++){const k=localStorage.key(i);if(k&&k.startsWith('bwatery_day_')){const ds=k.replace('bwatery_day_','');if(/^\d{4}-\d{2}-\d{2}$/.test(ds)){try{const p=JSON.parse(localStorage.getItem(k));const intake=p.intake||0;const goal=p.goal||state.dailyGoal;data.push({date:ds,intake: intake,goal: goal,met: intake>=goal})}catch(e){}}}}}catch(e){}return data.sort(function(a,b){return a.date.localeCompare(b.date)})}
@@ -945,11 +929,19 @@ function loadRating(){try{const r=parseInt(localStorage.getItem('bwatery_rating'
 function playWaterDrop(){if(!state.soundEnabled)return;try{const ctx=new(window.AudioContext||window.webkitAudioContext)();const o=ctx.createOscillator();const g=ctx.createGain();o.connect(g);g.connect(ctx.destination);o.type='sine';o.frequency.setValueAtTime(800,ctx.currentTime);o.frequency.exponentialRampToValueAtTime(400,ctx.currentTime+.15);g.gain.setValueAtTime(.3,ctx.currentTime);g.gain.exponentialRampToValueAtTime(.001,ctx.currentTime+.25);o.start(ctx.currentTime);o.stop(ctx.currentTime+.25);setTimeout(()=>ctx.close(),500)}catch(e){}}
 function toggleSound(){state.soundEnabled=!state.soundEnabled;document.getElementById('soundToggle').classList.toggle('on',state.soundEnabled);saveState()}
 
-function submitSuggestion(){const name=document.getElementById('suggestionName').value.trim();const comment=document.getElementById('suggestionComment').value.trim();if(!name)return alert('Please enter your name (required)');if(!comment)return alert('Please write your suggestion');let suggestions=[];try{suggestions=JSON.parse(localStorage.getItem('bwatery_suggestions')||'[]')}catch(e){}suggestions.unshift({name:name,text:comment,date:getToday()});if(suggestions.length>50)suggestions=suggestions.slice(0,50);try{localStorage.setItem('bwatery_suggestions',JSON.stringify(suggestions))}catch(e){}document.getElementById('suggestionName').value='';document.getElementById('suggestionComment').value='';renderUserComments();alert('Thank you for your feedback, '+name+'!')}
+function submitSuggestion(){const name=document.getElementById('suggestionName').value.trim();const comment=document.getElementById('suggestionComment').value.trim();if(!name)return alert('Please enter your name (required)');if(!comment)return alert('Please write your suggestion');const entry={name:name,text:comment,date:getToday(),timestamp:Date.now()};if(db){db.collection('feedback').add(entry).then(()=>{document.getElementById('suggestionName').value='';document.getElementById('suggestionComment').value='';renderUserComments();alert('Thank you for your feedback, '+name+'!')}).catch(e=>{console.error('Firestore write failed:',e);saveToLocal(entry);document.getElementById('suggestionName').value='';document.getElementById('suggestionComment').value='';renderUserComments();alert('Thank you for your feedback, '+name+'! (saved offline)')})}else{saveToLocal(entry);document.getElementById('suggestionName').value='';document.getElementById('suggestionComment').value='';renderUserComments();alert('Thank you for your feedback, '+name+'!')}}
+function saveToLocal(entry){let suggestions=[];try{suggestions=JSON.parse(localStorage.getItem('bwatery_suggestions')||'[]')}catch(e){}suggestions.unshift(entry);if(suggestions.length>50)suggestions=suggestions.slice(0,50);try{localStorage.setItem('bwatery_suggestions',JSON.stringify(suggestions))}catch(e){}}
 
-function renderUserComments(){const inner=document.getElementById('userCommentsInner');if(!inner)return;let suggestions=[];try{suggestions=JSON.parse(localStorage.getItem('bwatery_suggestions')||'[]')}catch(e){}if(!suggestions.length){inner.innerHTML='<div class="user-comments-empty">No experiences yet. Be the first to share!</div>';return}inner.innerHTML='';const items=suggestions.concat(suggestions);items.forEach(s=>{const el=document.createElement('div');el.className='user-comment-item';el.innerHTML='<span class="comment-name">'+escHtml(s.name)+':</span><span class="comment-text">'+escHtml(s.text)+'</span>';inner.appendChild(el)})}
+function renderUserComments(){const inner=document.getElementById('userCommentsInner');const manage=document.getElementById('feedbackManageList');if(!inner)return;if(db){db.collection('feedback').orderBy('timestamp','desc').limit(50).onSnapshot(snap=>{const items=[];snap.forEach(doc=>items.push({id:doc.id,...doc.data()}));if(!items.length){inner.innerHTML='<div class="user-comments-empty">No experiences yet. Be the first to share!</div>';if(manage)manage.innerHTML='';return}inner.innerHTML='';const doubled=items.concat(items);doubled.forEach(s=>{const el=document.createElement('div');el.className='user-comment-item';el.innerHTML='<span class="comment-name">'+escHtml(s.name)+':</span><span class="comment-text">'+escHtml(s.text)+'</span>';inner.appendChild(el)});if(manage)renderManageList(items)},()=>{renderUserCommentsLocal(inner);if(manage)renderManageListLocal(manage)})}else{renderUserCommentsLocal(inner);if(manage)renderManageListLocal(manage)}}
+function renderUserCommentsLocal(inner){let suggestions=[];try{suggestions=JSON.parse(localStorage.getItem('bwatery_suggestions')||'[]')}catch(e){}if(!suggestions.length){inner.innerHTML='<div class="user-comments-empty">No experiences yet. Be the first to share!</div>';return}inner.innerHTML='';const items=suggestions.concat(suggestions);items.forEach((s,i)=>{const el=document.createElement('div');el.className='user-comment-item';el.innerHTML='<span class="comment-name">'+escHtml(s.name)+':</span><span class="comment-text">'+escHtml(s.text)+'</span>';inner.appendChild(el)})}
+function renderManageList(items){const el=document.getElementById('feedbackManageList');if(!el)return;if(!items.length){el.innerHTML='';return}el.innerHTML='';items.forEach(s=>{const card=document.createElement('div');card.style.cssText='background:var(--surface-1);border:1px solid var(--border);border-radius:8px;padding:10px 12px;display:flex;flex-direction:column;gap:6px';card.innerHTML='<div style="font-size:12px;color:var(--text-secondary)"><b style="color:var(--text)">'+escHtml(s.name)+'</b> · '+escHtml(s.date)+'</div><div style="font-size:13px;color:var(--text)">'+escHtml(s.text)+'</div><div style="display:flex;gap:6px;justify-content:flex-end"><button onclick="editFeedback(\''+s.id+'\',\''+escHtml(s.name).replace(/'/g,"\\'")+'\',\''+escHtml(s.text).replace(/'/g,"\\'")+'\')" style="padding:3px 8px;border-radius:6px;border:1px solid var(--primary);background:transparent;color:var(--primary);font-size:11px;cursor:pointer;font-family:inherit">Edit</button><button onclick="deleteFeedback(\''+s.id+'\')" style="padding:3px 8px;border-radius:6px;border:1px solid var(--danger);background:transparent;color:var(--danger);font-size:11px;cursor:pointer;font-family:inherit">Delete</button></div>';el.appendChild(card)})}
+function renderManageListLocal(el){let suggestions=[];try{suggestions=JSON.parse(localStorage.getItem('bwatery_suggestions')||'[]')}catch(e){}if(!suggestions.length){el.innerHTML='';return}el.innerHTML='';suggestions.forEach((s,i)=>{const card=document.createElement('div');card.style.cssText='background:var(--surface-1);border:1px solid var(--border);border-radius:8px;padding:10px 12px;display:flex;flex-direction:column;gap:6px';card.innerHTML='<div style="font-size:12px;color:var(--text-secondary)"><b style="color:var(--text)">'+escHtml(s.name)+'</b> · '+escHtml(s.date)+'</div><div style="font-size:13px;color:var(--text)">'+escHtml(s.text)+'</div><div style="display:flex;gap:6px;justify-content:flex-end"><button onclick="editFeedbackLocal('+i+')" style="padding:3px 8px;border-radius:6px;border:1px solid var(--primary);background:transparent;color:var(--primary);font-size:11px;cursor:pointer;font-family:inherit">Edit</button><button onclick="deleteFeedbackLocal('+i+')" style="padding:3px 8px;border-radius:6px;border:1px solid var(--danger);background:transparent;color:var(--danger);font-size:11px;cursor:pointer;font-family:inherit">Delete</button></div>';el.appendChild(card)})}
+function deleteFeedback(id){if(!confirm('Delete this experience?'))return;if(db){db.collection('feedback').doc(id).delete().catch(e=>console.error('Delete failed:',e))}else{deleteFeedbackLocal(0)}}
+function deleteFeedbackLocal(idx){if(!confirm('Delete this experience?'))return;let s=[];try{s=JSON.parse(localStorage.getItem('bwatery_suggestions')||'[]')}catch(e){}s.splice(idx,1);localStorage.setItem('bwatery_suggestions',JSON.stringify(s));renderUserComments()}
+function editFeedback(id,name,text){const newText=prompt('Edit experience:',text);if(newText===null||newText.trim()==='')return;if(db){db.collection('feedback').doc(id).update({text:newText.trim()}).catch(e=>console.error('Update failed:',e))}}
+function editFeedbackLocal(idx){let s=[];try{s=JSON.parse(localStorage.getItem('bwatery_suggestions')||'[]')}catch(e){}const newText=prompt('Edit experience:',s[idx].text);if(newText===null||newText.trim()==='')return;s[idx].text=newText.trim();localStorage.setItem('bwatery_suggestions',JSON.stringify(s));renderUserComments()}
 
-function renderUserGreeting(){const avatar=document.getElementById('userAvatar');const text=document.getElementById('greetingText');const sub=document.getElementById('greetingSub');if(!avatar||!text||!sub)return;const name=state.userName||state.email||'User';const initial=name.charAt(0).toUpperCase();avatar.textContent=initial;const h=new Date().getHours();const greeting=h<12?'Good Morning':h<17?'Good Afternoon':'Good Evening';text.textContent=greeting+', '+name+'!';sub.textContent='You\'ve had '+getTotalDaysWithIntake()+' hydrated days'}
+function renderUserGreeting(){const avatar=document.getElementById('userAvatar');const text=document.getElementById('greetingText');const sub=document.getElementById('greetingSub');if(!avatar||!text||!sub)return;const name=state.userName||'User';const initial=name.charAt(0).toUpperCase();avatar.textContent=initial;const h=new Date().getHours();const greeting=h<12?'Good Morning':h<17?'Good Afternoon':'Good Evening';text.textContent=greeting+', '+name+'!';sub.textContent='You\'ve had '+getTotalDaysWithIntake()+' hydrated days'}
 
 function escHtml(s){const d=document.createElement('div');d.textContent=s;return d.innerHTML}
 
