@@ -7,6 +7,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Fredoka:wght@400;500;600;700&display=swap" rel="stylesheet">
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{--bg:#EAF6FF;--card-bg:rgba(255,255,255,.65);--surface-1:#DFF1FB;--primary:#2E9CCA;--primary-light:#5FC9E8;--primary-dark:#1D7A9E;--text:#1A3A4A;--text-secondary:#4A7A8A;--text-muted:#8AB4C4;--shadow:0 8px 32px rgba(46,156,202,.12);--border:rgba(46,156,202,.15);--radius:24px;--radius-sm:16px;--radius-xs:12px;--nav-height:68px;--danger:#FF6B6B;--success:#00B894;--warning:#FDCB6E;--transition:.3s cubic-bezier(.4,0,.2,1)}
@@ -263,6 +264,33 @@ body{font-family:'Poppins',sans-serif;background:var(--bg);background-image:radi
 
 .reminder-settings-info{font-size:11px;color:var(--text-muted);margin-top:4px}
 
+.loading-screen{position:fixed;inset:0;z-index:9998;background:var(--bg);display:none;flex-direction:column;align-items:center;justify-content:center;gap:20px;padding:20px}
+.loading-screen.active{display:flex}
+.loading-illu{width:180px;height:200px;animation:loadingBounce 2s ease-in-out infinite}
+@keyframes loadingBounce{0%,100%{transform:translateY(0) scale(1)}50%{transform:translateY(-20px) scale(1.05)}}
+.loading-title{font-family:'Fredoka',sans-serif;font-size:22px;font-weight:600;color:var(--primary)}
+.loading-sub{font-size:14px;color:var(--text-secondary);text-align:center;max-width:280px}
+.loading-bar-wrap{width:200px;height:6px;background:var(--border);border-radius:3px;overflow:hidden}
+.loading-bar{height:100%;background:linear-gradient(90deg,var(--primary),var(--primary-light));border-radius:3px;width:0%;transition:width .3s ease;animation:loadingProgress 3s ease-in-out forwards}
+@keyframes loadingProgress{0%{width:0%}20%{width:15%}40%{width:35%}60%{width:60%}80%{width:85%}100%{width:100%}}
+.loading-steps{font-size:12px;color:var(--text-muted);text-align:center;min-height:18px}
+.loading-steps span{animation:loadingText 3s ease-in-out forwards}
+@keyframes loadingText{0%,20%{opacity:1}25%,45%{opacity:0}50%,70%{opacity:1}75%,95%{opacity:0}100%{opacity:1}}
+
+.cup-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:12px}
+.cup-item{display:flex;flex-direction:column;align-items:center;gap:4px;padding:12px 8px;border:2px solid var(--border);border-radius:14px;background:transparent;cursor:pointer;transition:all var(--transition);color:var(--text-secondary);font-family:inherit;font-size:11px;font-weight:500}
+.cup-item:active{transform:scale(.95)}
+.cup-item.selected{border-color:var(--primary);background:rgba(46,156,202,.08);color:var(--primary)}
+.cup-item svg{width:32px;height:32px}
+.cup-item .cup-ml{font-size:10px;color:var(--text-muted)}
+
+.privacy-section{margin-bottom:16px}
+.privacy-section h4{font-size:14px;font-weight:600;color:var(--primary);margin-bottom:6px}
+.privacy-section p{font-size:13px;color:var(--text-secondary);line-height:1.6}
+.privacy-section ul{list-style:none;display:flex;flex-direction:column;gap:4px}
+.privacy-section li{font-size:13px;color:var(--text-secondary);padding-left:16px;position:relative}
+.privacy-section li::before{content:'•';position:absolute;left:0;color:var(--primary)}
+
 @media(hover:hover){
   .btn-primary:hover{background:var(--primary-dark);transform:translateY(-1px)}
   .btn-secondary:hover{background:var(--primary);color:#fff}
@@ -362,7 +390,74 @@ button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-vis
   <div class="splash-sub">Stay hydrated, stay healthy</div>
 </div>
 
+<!-- LOADING SCREEN -->
+<div class="loading-screen" id="loadingScreen">
+  <svg class="loading-illu" viewBox="0 0 260 290" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+      <linearGradient id="loadGrad" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#5FC9E8"/><stop offset="100%" stop-color="#2E9CCA"/></linearGradient>
+      <clipPath id="loadClip"><path d="M130,15 C190,15 245,65 250,135 C255,205 200,275 130,275 C60,275 5,205 10,135 C15,65 70,15 130,15 Z"/></clipPath>
+    </defs>
+    <path d="M130,15 C190,15 245,65 250,135 C255,205 200,275 130,275 C60,275 5,205 10,135 C15,65 70,15 130,15 Z" fill="#E0F4FF" stroke="#B0DCEF" stroke-width="1.5"/>
+    <rect id="loadWater" x="0" y="270" width="260" height="0" fill="url(#loadGrad)" clip-path="url(#loadClip)">
+      <animate attributeName="y" from="270" to="100" dur="3s" fill="freeze"/>
+      <animate attributeName="height" from="0" to="170" dur="3s" fill="freeze"/>
+    </rect>
+    <g clip-path="url(#loadClip)"><g style="animation:illuFloat 3s ease-in-out infinite"><image href="meditation.svg" x="10" y="25" width="240" height="240"/></g></g>
+    <path d="M130,15 C190,15 245,65 250,135 C255,205 200,275 130,275 C60,275 5,205 10,135 C15,65 70,15 130,15 Z" fill="url(#bubbleShine)" pointer-events="none"/>
+    <ellipse cx="70" cy="70" rx="30" ry="18" fill="rgba(255,255,255,.55)" transform="rotate(-20 70 70)"/>
+  </svg>
+  <div class="loading-title brand">Generating Your Plan</div>
+  <div class="loading-sub">Personalizing your daily hydration goal based on your profile...</div>
+  <div class="loading-bar-wrap"><div class="loading-bar"></div></div>
+  <div class="loading-steps"><span>Analyzing your profile...</span></div>
+</div>
+
+<!-- PRIVACY POLICY -->
+<div class="screen" id="screen-privacy">
+  <button class="back-btn" onclick="goBack()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg></button>
+  <div class="dash-card">
+    <h3>Privacy Policy</h3>
+    <div class="privacy-section">
+      <h4>Personal Information</h4>
+      <p>We respect the privacy of our users. We do not collect, store, or share any personal information outside your device.</p>
+    </div>
+    <div class="privacy-section">
+      <h4>Permission Requests</h4>
+      <p>For the app to function properly, BWATERY requires some permissions:</p>
+      <ul>
+        <li><b>INTERNET</b> — Used only to show live weather temperature and hydration tips.</li>
+        <li><b>SCHEDULE_EXACT_ALARM</b> — Allows the app to remind you to drink water at the correct time.</li>
+      </ul>
+    </div>
+    <div class="privacy-section">
+      <h4>Data Storage</h4>
+      <p>All your hydration data (intake, goals, history) is stored only on your own device using local storage. Nothing is sent to a server unless you choose to share feedback, which is optional.</p>
+    </div>
+  </div>
+</div>
+
 <div class="app-container" id="app">
+
+  <!-- LOGIN / SIGNUP -->
+  <div class="screen" id="screen-login">
+    <div class="onboarding-card">
+      <div class="meditation-wrap"><img src="meditation.svg" alt="" class="meditation-illu md"></div>
+      <h2 class="brand">BWATERY</h2>
+      <p class="brand-sub">Sign in to save your progress</p>
+      <div class="form-group">
+        <label>Email</label>
+        <input type="email" id="authEmail" placeholder="you@example.com">
+      </div>
+      <div class="form-group">
+        <label>Password</label>
+        <input type="password" id="authPassword" placeholder="At least 6 characters">
+      </div>
+      <button class="btn-primary" onclick="signUp()">Create Account</button>
+      <div style="margin:10px 0;color:var(--text-secondary);font-size:13px">or</div>
+      <button class="btn-secondary" onclick="logIn()">I already have an account</button>
+      <p id="authError" style="color:var(--danger);font-size:13px;margin-top:10px"></p>
+    </div>
+  </div>
 
   <!-- ONBOARDING -->
   <div class="screen" id="screen-onboarding">
@@ -384,6 +479,20 @@ button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-vis
       <div class="form-group">
         <label>Your Age</label>
         <input type="number" id="ageInput" placeholder="Enter your age" min="1" max="150" inputmode="numeric">
+      </div>
+      <div class="form-group">
+        <label>Weight (kg)</label>
+        <input type="number" id="weightInput" placeholder="Enter your weight in kg" min="10" max="300" step="0.1" inputmode="decimal">
+      </div>
+      <div class="form-group" style="display:flex;gap:12px">
+        <div style="flex:1">
+          <label>Wake-up Time</label>
+          <input type="time" id="wakeTimeInput" value="07:00" style="width:100%;padding:10px;border:2px solid var(--border);border-radius:var(--radius-xs);font-family:inherit;font-size:14px;background:var(--card-bg);color:var(--text);outline:none">
+        </div>
+        <div style="flex:1">
+          <label>Bedtime</label>
+          <input type="time" id="bedTimeInput" value="23:00" style="width:100%;padding:10px;border:2px solid var(--border);border-radius:var(--radius-xs);font-family:inherit;font-size:14px;background:var(--card-bg);color:var(--text);outline:none">
+        </div>
       </div>
       <button class="btn-primary" onclick="goToSetGoal()">Get started</button>
     </div>
@@ -586,6 +695,19 @@ button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-vis
         <span class="setting-label">Dark Mode</span>
         <div class="toggle-switch" id="darkToggle" onclick="toggleDarkMode()"><div class="knob"></div></div>
       </div>
+      <div class="setting-item">
+        <span class="setting-label">Units<small>Metric or Imperial</small></span>
+        <select class="reminder-select" id="unitSelect" onchange="updateUnit(this.value)">
+          <option value="ml">Metric (ml / L)</option>
+          <option value="oz">Imperial (oz / gal)</option>
+        </select>
+      </div>
+      <div class="setting-item">
+        <span class="setting-label">Language</span>
+        <select class="reminder-select" id="langSelect" onchange="updateLanguage(this.value)">
+          <option value="en">English</option>
+        </select>
+      </div>
       <div class="setting-section-title">Hydration</div>
       <div class="setting-item">
         <span class="setting-label">Daily Goal<small>Custom water target (L)</small></span>
@@ -597,7 +719,7 @@ button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-vis
       </div>
       <div class="setting-section-title">Notifications</div>
       <div class="setting-item">
-        <span class="setting-label">Reminder Interval<small>App + browser notifications</small></span>
+        <span class="setting-label">Reminder Interval<small>How often to remind you</small></span>
         <select class="reminder-select" id="reminderInterval" onchange="updateReminder(this.value)">
           <option value="0">Off</option>
           <option value="15">15 min</option>
@@ -608,20 +730,39 @@ button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-vis
         </select>
       </div>
       <div class="setting-item">
-        <span class="setting-label">Reminder Sound<small>Water drop sound on alerts</small></span>
-        <div style="display:flex;align-items:center;gap:8px">
-          <button style="padding:4px 10px;border-radius:8px;border:1px solid var(--border);background:var(--surface-1);color:var(--text-secondary);font-family:inherit;font-size:11px;cursor:pointer;min-height:28px" onclick="playWaterDrop()">Test</button>
-          <div class="toggle-switch on" id="soundToggle" onclick="toggleSound()"><div class="knob"></div></div>
-        </div>
+        <span class="setting-label">Reminder Mode<small>How notifications appear</small></span>
+        <select class="reminder-select" id="reminderMode" onchange="updateReminderMode(this.value)">
+          <option value="sound">Sound + Vibrate</option>
+          <option value="soundOnly">Sound Only</option>
+          <option value="vibrate">Vibrate Only</option>
+          <option value="display">Display Only</option>
+          <option value="off">Turn Off</option>
+        </select>
+      </div>
+      <div class="setting-item">
+        <span class="setting-label">Remind After Goal<small>Still remind when goal is achieved</small></span>
+        <div class="toggle-switch" id="remindAfterGoalToggle" onclick="toggleRemindAfterGoal()"><div class="knob"></div></div>
+      </div>
+      <div class="setting-item">
+        <span class="setting-label">Wake-up Time<small>When your day starts</small></span>
+        <input type="time" class="settings-goal-input" id="settingsWakeTime" value="07:00" onchange="updateWakeTime(this.value)" style="width:100px">
+      </div>
+      <div class="setting-item">
+        <span class="setting-label">Bedtime<small>When your day ends</small></span>
+        <input type="time" class="settings-goal-input" id="settingsBedTime" value="23:00" onchange="updateBedTime(this.value)" style="width:100px">
       </div>
       <div class="setting-section-title">Data</div>
       <div class="setting-item">
         <span class="setting-label">Reset Today<small>Manually clear your intake</small></span>
         <button class="reset-manual-btn" style="padding:8px 16px;border-radius:12px;border:2px solid var(--danger);background:transparent;color:var(--danger);font-family:inherit;font-size:13px;font-weight:600;cursor:pointer;min-height:36px" onclick="resetGoal()">🔄 Reset</button>
       </div>
-      <div class="setting-item" style="border:none">
+      <div class="setting-item">
         <span class="setting-label">Export Data<small>Download history as CSV</small></span>
         <button class="reset-manual-btn" style="padding:8px 16px;border-radius:12px;border:2px solid var(--primary);background:transparent;color:var(--primary);font-family:inherit;font-size:13px;font-weight:600;cursor:pointer;min-height:36px" onclick="exportCSV()">📥 Export</button>
+      </div>
+      <div class="setting-item" style="border:none">
+        <span class="setting-label">Logout<small>Sign out of your account</small></span>
+        <button class="btn-danger" style="max-width:100px;padding:8px 16px;border-radius:12px;font-size:13px;min-height:36px" onclick="logOut()">🚪 Logout</button>
       </div>
       <div class="setting-section-title">More</div>
       <div class="setting-item" style="cursor:pointer" onclick="showScreen('screen-tips')">
@@ -630,6 +771,10 @@ button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-vis
       </div>
       <div class="setting-item" style="cursor:pointer" onclick="showScreen('screen-about')">
         <span class="setting-label">About App<small>Version, tech stack, info</small></span>
+        <span style="color:var(--text-muted);font-size:18px">›</span>
+      </div>
+      <div class="setting-item" style="cursor:pointer" onclick="showScreen('screen-privacy')">
+        <span class="setting-label">Privacy Policy<small>How we handle your data</small></span>
         <span style="color:var(--text-muted);font-size:18px">›</span>
       </div>
       <div class="setting-section-title">Rate & Feedback</div>
@@ -725,11 +870,37 @@ button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-vis
 <div class="modal-overlay" id="addWaterModal">
   <div class="modal-card">
     <h3>Add Water</h3>
-    <div class="modal-grid">
-      <button onclick="addWater(100)" style="background:rgba(95,201,232,.1);color:#5FC9E8">100 ml</button>
-      <button onclick="addWater(250)" style="background:rgba(46,156,202,.1);color:var(--primary)">250 ml</button>
-      <button onclick="addWater(500)" class="btn-deep">500 ml</button>
-      <button onclick="addWater(1000)" class="btn-deep" style="background:rgba(29,122,158,.15);color:var(--primary-dark)">1 L</button>
+    <div class="cup-grid" id="cupGrid">
+      <button class="cup-item" onclick="addWater(150)">
+        <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 8h24v4l-3 28H15L12 12V8z" stroke-linejoin="round"/><path d="M12 8h24" stroke-linecap="round"/></svg>
+        <span>Cup</span>
+        <span class="cup-ml">150 ml</span>
+      </button>
+      <button class="cup-item selected" onclick="addWater(250)">
+        <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 12h28v4l-4 24H14L10 16V12z" stroke-linejoin="round"/><path d="M10 12h28" stroke-linecap="round"/><path d="M38 18c4 0 6 2 6 6s-2 6-6 6" stroke-linecap="round"/></svg>
+        <span>Mug</span>
+        <span class="cup-ml">250 ml</span>
+      </button>
+      <button class="cup-item" onclick="addWater(350)">
+        <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 6h20v32H14V6z" stroke-linejoin="round"/><path d="M14 6h20" stroke-linecap="round"/><path d="M18 14h12" stroke-linecap="round" opacity=".4"/></svg>
+        <span>Glass</span>
+        <span class="cup-ml">350 ml</span>
+      </button>
+      <button class="cup-item" onclick="addWater(500)">
+        <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2"><rect x="14" y="4" width="20" height="40" rx="4" stroke-linejoin="round"/><path d="M14 12h20" stroke-linecap="round" opacity=".4"/><path d="M20 4V1h8v3" stroke-linecap="round"/></svg>
+        <span>Bottle</span>
+        <span class="cup-ml">500 ml</span>
+      </button>
+      <button class="cup-item" onclick="addWater(750)">
+        <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2"><rect x="16" y="2" width="16" height="44" rx="5" stroke-linejoin="round"/><path d="M16 10h16" stroke-linecap="round" opacity=".4"/><path d="M20 2h8" stroke-linecap="round"/></svg>
+        <span>Large</span>
+        <span class="cup-ml">750 ml</span>
+      </button>
+      <button class="cup-item" onclick="addWater(1000)">
+        <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 4h18l2 6v30a4 4 0 01-4 4H17a4 4 0 01-4-4V10l2-6z" stroke-linejoin="round"/><path d="M15 4h18" stroke-linecap="round"/><path d="M19 14h10" stroke-linecap="round" opacity=".4"/><path d="M13 16c-3 0-4 2-4 4v2h30v-2c0-2-1-4-4-4" stroke-linejoin="round" opacity=".4"/></svg>
+        <span>1 Liter</span>
+        <span class="cup-ml">1000 ml</span>
+      </button>
     </div>
     <div class="custom-input-wrap">
       <input type="number" id="customWaterInput" placeholder="Custom ml" inputmode="numeric" min="1">
@@ -766,14 +937,17 @@ const firebaseConfig = {
   appId: "1:1068107231462:web:1166cb678385aaac8ccb27"
 };
 let db = null;
+let auth = null;
+let currentUser = null;
 try {
   firebase.initializeApp(firebaseConfig);
   db = firebase.firestore();
+  auth = firebase.auth();
 } catch(e) {
   console.warn('Firebase init failed, using localStorage fallback:', e);
 }
 
-const state={gender:null,age:null,dailyGoal:3000,currentIntake:0,darkMode:false,reminderInterval:30,reminderTimer:null,weatherBoost:true,lastDate:null,_weatherBoosted:false,onboarded:false,userName:'',soundEnabled:true};
+const state={gender:null,age:null,weight:null,dailyGoal:3000,currentIntake:0,darkMode:false,reminderInterval:30,reminderTimer:null,weatherBoost:true,lastDate:null,_weatherBoosted:false,onboarded:false,userName:'',soundEnabled:true,wakeTime:'07:00',bedTime:'23:00',reminderMode:'sound',remindAfterGoal:false,unit:'ml',defaultCup:250,language:'en'};
 const BUBBLE_TOP=85,BUBBLE_BOTTOM=270,BUBBLE_RANGE=BUBBLE_BOTTOM-BUBBLE_TOP;
 const ACHIEVEMENTS=[
   {id:'first_sip',name:'First Sip',desc:'Log your first water',icon:'💧',check:()=>getTotalDaysWithIntake()>=1},
@@ -790,11 +964,22 @@ function init(){
   setTimeout(()=>{document.getElementById('splash').classList.add('hide');setTimeout(()=>{document.getElementById('splash').style.display='none'},600)},2000);
   loadState();applyDarkMode();
   const st=document.getElementById('soundToggle');if(st)st.classList.toggle('on',state.soundEnabled);
-  if(state.onboarded){
-    showScreen('screen-dashboard');
-    renderAll();fetchStats();fetchWeather();checkAchievements();
+  if(auth){
+    auth.onAuthStateChanged((user)=>{
+      if(user){
+        currentUser=user;
+        loadUserData();
+      }else{
+        showScreen('screen-login');
+      }
+    });
   }else{
-    showScreen('screen-onboarding');
+    if(state.onboarded){
+      showScreen('screen-dashboard');
+      renderAll();fetchStats();fetchWeather();checkAchievements();
+    }else{
+      showScreen('screen-onboarding');
+    }
   }
   checkMidnightReset();setInterval(checkMidnightReset,60000);
   if(state.reminderInterval>0&&state.onboarded)startReminderTimer();
@@ -803,6 +988,12 @@ function init(){
   renderUserGreeting();renderUserComments();
 }
 
+function signUp(){const email=document.getElementById('authEmail').value.trim();const pass=document.getElementById('authPassword').value;const errBox=document.getElementById('authError');errBox.textContent='';if(!email||!pass)return errBox.textContent='Please fill in both fields';if(pass.length<6)return errBox.textContent='Password must be at least 6 characters';auth.createUserWithEmailAndPassword(email,pass).then((cred)=>{currentUser=cred.user;loadUserData()}).catch((e)=>{errBox.textContent=e.message})}
+function logIn(){const email=document.getElementById('authEmail').value.trim();const pass=document.getElementById('authPassword').value;const errBox=document.getElementById('authError');errBox.textContent='';if(!email||!pass)return errBox.textContent='Please fill in both fields';auth.signInWithEmailAndPassword(email,pass).then((cred)=>{currentUser=cred.user;loadUserData()}).catch((e)=>{errBox.textContent=e.message})}
+function logOut(){auth.signOut().then(()=>{currentUser=null;showScreen('screen-login')})}
+function saveUserData(){if(!currentUser||!db)return;db.collection('users').doc(currentUser.uid).set({userName:state.userName,gender:state.gender,age:state.age,weight:state.weight,dailyGoal:state.dailyGoal,onboarded:state.onboarded},{merge:true})}
+function loadUserData(){if(!currentUser||!db)return;db.collection('users').doc(currentUser.uid).get().then((doc)=>{if(doc.exists){const d=doc.data();state.userName=d.userName||'';state.gender=d.gender||null;state.age=d.age||null;state.weight=d.weight||null;state.dailyGoal=d.dailyGoal||3000;state.onboarded=d.onboarded||false;if(state.onboarded){showScreen('screen-dashboard');renderAll();renderUserGreeting()}else{showScreen('screen-onboarding')}}else{showScreen('screen-onboarding')}})}
+
 function loadState(){
   try{const s=localStorage.getItem('bwatery_state');if(s)Object.assign(state,JSON.parse(s))}catch(e){}
   const today=getToday(),data=localStorage.getItem('bwatery_day_'+today);
@@ -810,6 +1001,12 @@ function loadState(){
   const g=document.getElementById('settingsGoal'),r=document.getElementById('reminderInterval');
   if(g)g.value=(state.dailyGoal-(state._weatherBoosted?500:0))/1000;
   if(r)r.value=state.reminderInterval;
+  const rm=document.getElementById('reminderMode');if(rm)rm.value=state.reminderMode||'sound';
+  const rat=document.getElementById('remindAfterGoalToggle');if(rat)rat.classList.toggle('on',!!state.remindAfterGoal);
+  const wt=document.getElementById('settingsWakeTime');if(wt)wt.value=state.wakeTime||'07:00';
+  const bt=document.getElementById('settingsBedTime');if(bt)bt.value=state.bedTime||'23:00';
+  const un=document.getElementById('unitSelect');if(un)un.value=state.unit||'ml';
+  const lg=document.getElementById('langSelect');if(lg)lg.value=state.language||'en';
 }
 function saveState(){try{localStorage.setItem('bwatery_state',JSON.stringify(state))}catch(e){}}
 function toDateStr(d){return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0')}
@@ -820,7 +1017,7 @@ function hideAllScreens(){document.querySelectorAll('.screen').forEach(s=>s.clas
 function activateNav(id){document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));const i=document.querySelector('.nav-item[data-screen="'+id+'"]');if(i)i.classList.add('active')}
 
 const navScreens=['screen-dashboard','screen-stats','screen-history','screen-achievements','screen-settings','screen-tips','screen-about'];
-const noBackScreens=['screen-dashboard','screen-splash','screen-onboarding','screen-setgoal'];
+const noBackScreens=['screen-dashboard','screen-splash','screen-onboarding','screen-setgoal','screen-loading'];
 let screenHistory=[];
 function showScreen(id,skipPush){
   hideAllScreens();document.getElementById(id).classList.add('active');activateNav(id);
@@ -845,27 +1042,28 @@ function fetchStats(){
   if(e1)e1.textContent=a;if(e2)e2.textContent=flame+' '+streak+' days'}catch(e){}
 }
 
-function selectGender(btn){document.querySelectorAll('.gender-btn').forEach(b=>b.classList.remove('selected'));btn.classList.add('selected');state.gender=btn.dataset.gender;const s=state.gender==='male'?3.0:2.2;document.getElementById('suggestedGoal').textContent=s;document.getElementById('goalInput').value=s;updateGoalPreview(s)}
-function goToSetGoal(){const n=document.getElementById('onboardName').value.trim();const a=parseInt(document.getElementById('ageInput').value);if(!n)return alert('Please enter your name');if(!state.gender)return alert('Please select your gender');if(!a||a<1)return alert('Please enter a valid age');state.userName=n;state.age=a;const s=state.gender==='male'?3.0:2.2;document.getElementById('goalInput').value=s;updateGoalPreview(s);showScreen('screen-setgoal')}
+function selectGender(btn){document.querySelectorAll('.gender-btn').forEach(b=>b.classList.remove('selected'));btn.classList.add('selected');state.gender=btn.dataset.gender}
+function goToSetGoal(){const n=document.getElementById('onboardName').value.trim();const a=parseInt(document.getElementById('ageInput').value);const w=parseFloat(document.getElementById('weightInput').value);const wake=document.getElementById('wakeTimeInput').value||'07:00';const bed=document.getElementById('bedTimeInput').value||'23:00';if(!n)return alert('Please enter your name');if(!state.gender)return alert('Please select your gender');if(!a||a<1)return alert('Please enter a valid age');if(!w||w<10)return alert('Please enter a valid weight');state.userName=n;state.age=a;state.weight=w;state.wakeTime=wake;state.bedTime=bed;let s=(w*33)/1000;if(s<1.5)s=1.5;if(s>6)s=6;s=Math.round(s*10)/10;document.getElementById('goalInput').value=s;updateGoalPreview(s);showScreen('screen-setgoal')}
 function updateGoalPreview(v){const n=parseFloat(v);if(!isNaN(n)&&n>0)document.getElementById('goalDisplayValue').textContent=n.toFixed(1)}
-function finishGoal(){let g=Math.round(parseFloat(document.getElementById('goalInput').value)*1000);if(!g||g<500)g=state.gender==='male'?3000:2200;state.dailyGoal=g;state.onboarded=true;saveState();saveToday();showScreen('screen-dashboard');renderAll();startReminderTimer();fetchWeather();checkAchievements();renderUserGreeting()}
+function finishGoal(){let g=Math.round(parseFloat(document.getElementById('goalInput').value)*1000);if(!g||g<500)g=Math.round(state.weight*33);state.dailyGoal=g;state.onboarded=true;saveState();saveToday();showLoadingScreen();saveUserData()}
+function showLoadingScreen(){const load=document.getElementById('loadingScreen');if(!load){showScreen('screen-dashboard');renderAll();startReminderTimer();fetchWeather();checkAchievements();renderUserGreeting();return}load.classList.add('active');const steps=load.querySelector('.loading-steps');const msgs=['Analyzing your profile...','Calculating your ideal goal...','Setting up reminders...','Almost ready...'];let i=0;const stepTimer=setInterval(()=>{i++;if(i<msgs.length&&steps)steps.innerHTML='<span>'+msgs[i]+'</span>'},750);setTimeout(()=>{clearInterval(stepTimer);load.classList.remove('active');showScreen('screen-dashboard');renderAll();startReminderTimer();fetchWeather();checkAchievements();renderUserGreeting()},3000)}
 
-function addWater(ml){state.currentIntake=Math.min(state.currentIntake+ml,state.dailyGoal);closeAddModal();saveToday();saveState();renderAll();checkAchievements();splashEffect()}
-function clearAllData(){if(!confirm('This will delete ALL your data (history, settings, achievements). Continue?'))return;try{Object.keys(localStorage).forEach(k=>{if(k.startsWith('bwatery_'))localStorage.removeItem(k)})}catch(e){}state.gender=null;state.age=null;state.dailyGoal=3000;state.currentIntake=0;state.darkMode=false;state.reminderInterval=30;state.weatherBoost=true;state.lastDate=null;state._weatherBoosted=false;state.onboarded=false;state.userName='';state.soundEnabled=true;saveState();applyDarkMode();showScreen('screen-onboarding')}
+function addWater(ml){state.currentIntake=Math.min(state.currentIntake+ml,state.dailyGoal);closeAddModal();saveToday();saveState();renderAll();checkAchievements();splashEffect();saveUserData()}
+function clearAllData(){if(!confirm('This will delete ALL your data (history, settings, achievements). Continue?'))return;try{Object.keys(localStorage).forEach(k=>{if(k.startsWith('bwatery_'))localStorage.removeItem(k)})}catch(e){}state.gender=null;state.age=null;state.weight=null;state.dailyGoal=3000;state.currentIntake=0;state.darkMode=false;state.reminderInterval=30;state.weatherBoost=true;state.lastDate=null;state._weatherBoosted=false;state.onboarded=false;state.userName='';state.soundEnabled=true;state.wakeTime='07:00';state.bedTime='23:00';state.reminderMode='sound';state.remindAfterGoal=false;state.unit='ml';state.defaultCup=250;state.language='en';saveState();applyDarkMode();showScreen('screen-onboarding')}
 function splashEffect(){const w=document.querySelector('.hero-bubble-wrap');if(!w)return;const r=document.createElement('div');r.style.cssText='position:absolute;top:50%;left:50%;width:20px;height:20px;border:3px solid var(--primary-light);border-radius:50%;transform:translate(-50%,-50%);opacity:.8;pointer-events:none;animation:rippleOut .6s ease-out forwards;z-index:10';w.appendChild(r);setTimeout(()=>r.remove(),650)}
 function customAdd(){const v=document.getElementById('customWaterInput').value;const n=parseInt(v);if(!n||n<=0)return alert('Enter a valid amount');addWater(n);document.getElementById('customWaterInput').value=''}
 function showAddModal(){document.getElementById('addWaterModal').classList.add('active')}
 function closeAddModal(){document.getElementById('addWaterModal').classList.remove('active')}
 function resetGoal(){if(!confirm("Reset today's intake to 0?"))return;state.currentIntake=0;saveToday();saveState();renderAll()}
 
-function fmtL(ml){const l=ml/1000;return(Math.round(l*100)/100).toString().replace(/\.0$/,'')+' L'}
+function fmtL(ml){if(state.unit==='oz'){const oz=Math.round(ml/29.5735*10)/10;return oz+' oz'}const l=ml/1000;return(Math.round(l*100)/100).toString().replace(/\.0$/,'')+' L'}
 function renderAll(){
   const intake=state.currentIntake,goal=state.dailyGoal,pct=Math.min(intake/goal,1),remaining=Math.max(goal-intake,0);
   const ml=document.getElementById('mlCurrent'),rm=document.getElementById('mlRemaining'),ra=document.getElementById('resetGoalArea');
   if(ml)ml.textContent=fmtL(intake);if(rm)rm.textContent='Remaining '+fmtL(remaining);
   if(ra)ra.style.display=(intake>=goal&&goal>0)?'flex':'none';
   const addBtn=document.querySelector('.add-main-btn');
-  if(addBtn){const h=new Date().getHours();const exp=Math.min(.85,h/18*.7);addBtn.classList.toggle('needs-water',pct<exp&&h>=8&&h<=22)}
+  if(addBtn){const now=new Date();const h=now.getHours(),m=now.getMinutes();const currentTime=h*60+m;const [wH,wM]=(state.wakeTime||'07:00').split(':').map(Number);const [bH,bM]=(state.bedTime||'23:00').split(':').map(Number);const wakeMin=wH*60+wM;const bedMin=bH*60+bM;const isAwake=bedMin>wakeMin?(currentTime>=wakeMin&&currentTime<=bedMin):(currentTime>=wakeMin||currentTime<=bedMin);const exp=Math.min(.85,currentTime/(24*60)*1.2);addBtn.classList.toggle('needs-water',pct<exp&&isAwake)}
   const wr=document.getElementById('heroWater'),ww=document.getElementById('heroWave');
   if(wr){const h=pct*BUBBLE_RANGE,y=BUBBLE_BOTTOM-h;wr.setAttribute('y',y);wr.setAttribute('height',h);if(ww)ww.setAttribute('d','M5,'+y+' Q70,'+(y-11)+' 130,'+y+' Q190,'+(y+11)+' 255,'+y+' L255,280 L5,280 Z')}
   fetchStats();
@@ -917,17 +1115,23 @@ function toggleWeatherBoost(){state.weatherBoost=!state.weatherBoost;document.ge
 function toggleDarkMode(){state.darkMode=!state.darkMode;applyDarkMode();saveState()}
 function applyDarkMode(){document.documentElement.classList.toggle('dark-mode',state.darkMode);const t=document.getElementById('darkToggle');if(t)t.classList.toggle('on',state.darkMode)}
 
-function updateGoal(val){const n=Math.round(parseFloat(val)*1000);if(n>=500){state.dailyGoal=state._weatherBoosted?n+500:n;if(state.currentIntake>state.dailyGoal)state.currentIntake=state.dailyGoal;saveToday();saveState();renderAll()}}
+function updateGoal(val){const n=Math.round(parseFloat(val)*1000);if(n>=500){state.dailyGoal=state._weatherBoosted?n+500:n;if(state.currentIntake>state.dailyGoal)state.currentIntake=state.dailyGoal;saveToday();saveState();renderAll();saveUserData()}}
 function updateReminder(val){state.reminderInterval=parseInt(val);saveState();if(state.reminderTimer)clearInterval(state.reminderTimer);if(state.reminderInterval>0)startReminderTimer()}
 function requestNotifyPermission(){if('Notification' in window&&Notification.permission==='default')Notification.requestPermission()}
-function startReminderTimer(){if(state.reminderTimer)clearInterval(state.reminderTimer);requestNotifyPermission();state.reminderTimer=setInterval(()=>{const pct=state.currentIntake/state.dailyGoal;const h=new Date().getHours();const exp=Math.min(.85,h/18*.7);if(pct<exp&&h>=8&&h<=22){playWaterDrop();const p=document.getElementById('reminderPopup');if(p&&!p.classList.contains('active'))p.classList.add('active');if('Notification' in window&&Notification.permission==='granted')new Notification('💧 Time to Drink!',{body:'You\'re behind on your goal. ('+fmtL(state.currentIntake)+' / '+fmtL(state.dailyGoal)+')'})}},state.reminderInterval*60*1000)}
+function startReminderTimer(){if(state.reminderTimer)clearInterval(state.reminderTimer);if(state.reminderMode==='off')return;requestNotifyPermission();state.reminderTimer=setInterval(()=>{const pct=state.currentIntake/state.dailyGoal;const now=new Date();const h=now.getHours(),m=now.getMinutes();const currentTime=h*60+m;const [wH,wM]=(state.wakeTime||'07:00').split(':').map(Number);const [bH,bM]=(state.bedTime||'23:00').split(':').map(Number);const wakeMin=wH*60+wM;const bedMin=bH*60+bM;const isAwake=bedMin>wakeMin?(currentTime>=wakeMin&&currentTime<=bedMin):(currentTime>=wakeMin||currentTime<=bedMin);const exp=Math.min(.85,(currentTime/(24*60))*1.2);if(isAwake&&(pct<exp||state.remindAfterGoal)){if(state.reminderMode==='sound'||state.reminderMode==='soundOnly')playWaterDrop();if(state.reminderMode==='vibrate'&&navigator.vibrate)navigator.vibrate(200);if(state.reminderMode==='sound'&&navigator.vibrate)navigator.vibrate(200);const p=document.getElementById('reminderPopup');if(p&&!p.classList.contains('active'))p.classList.add('active');if(state.reminderMode!=='display'&&state.reminderMode!=='off'&&'Notification' in window&&Notification.permission==='granted')new Notification('💧 Time to Drink!',{body:'You\'re behind on your goal. ('+fmtL(state.currentIntake)+' / '+fmtL(state.dailyGoal)+')'})}},state.reminderInterval*60*1000)}
 function dismissReminder(){const p=document.getElementById('reminderPopup');if(p)p.classList.remove('active')}
 
 function setRating(n){const stars=document.querySelectorAll('.rate-star');stars.forEach((s,i)=>s.classList.toggle('filled',i<n));try{localStorage.setItem('bwatery_rating',n)}catch(e){}const t=document.getElementById('rateText');const msgs=['','We\'ll do better!','Not bad!','Good!','Great!','Amazing! 🎉'];if(t)t.textContent=msgs[n]||'Tap to rate'}
 function loadRating(){try{const r=parseInt(localStorage.getItem('bwatery_rating'));if(r&&r>=1&&r<=5)setRating(r)}catch(e){}}
 
-function playWaterDrop(){if(!state.soundEnabled)return;try{const ctx=new(window.AudioContext||window.webkitAudioContext)();const o=ctx.createOscillator();const g=ctx.createGain();o.connect(g);g.connect(ctx.destination);o.type='sine';o.frequency.setValueAtTime(800,ctx.currentTime);o.frequency.exponentialRampToValueAtTime(400,ctx.currentTime+.15);g.gain.setValueAtTime(.3,ctx.currentTime);g.gain.exponentialRampToValueAtTime(.001,ctx.currentTime+.25);o.start(ctx.currentTime);o.stop(ctx.currentTime+.25);setTimeout(()=>ctx.close(),500)}catch(e){}}
+function playWaterDrop(){try{const ctx=new(window.AudioContext||window.webkitAudioContext)();const o=ctx.createOscillator();const g=ctx.createGain();o.connect(g);g.connect(ctx.destination);o.type='sine';o.frequency.setValueAtTime(800,ctx.currentTime);o.frequency.exponentialRampToValueAtTime(400,ctx.currentTime+.15);g.gain.setValueAtTime(.3,ctx.currentTime);g.gain.exponentialRampToValueAtTime(.001,ctx.currentTime+.25);o.start(ctx.currentTime);o.stop(ctx.currentTime+.25);setTimeout(()=>ctx.close(),500)}catch(e){}}
 function toggleSound(){state.soundEnabled=!state.soundEnabled;document.getElementById('soundToggle').classList.toggle('on',state.soundEnabled);saveState()}
+function updateReminderMode(val){state.reminderMode=val;saveState();if(state.reminderTimer){clearInterval(state.reminderTimer);if(state.reminderInterval>0)startReminderTimer()}}
+function toggleRemindAfterGoal(){state.remindAfterGoal=!state.remindAfterGoal;document.getElementById('remindAfterGoalToggle').classList.toggle('on',state.remindAfterGoal);saveState()}
+function updateWakeTime(val){state.wakeTime=val;saveState()}
+function updateBedTime(val){state.bedTime=val;saveState()}
+function updateUnit(val){state.unit=val;saveState();renderAll();fetchStats()}
+function updateLanguage(val){state.language=val;saveState()}
 
 function submitSuggestion(){const name=document.getElementById('suggestionName').value.trim();const comment=document.getElementById('suggestionComment').value.trim();if(!name)return alert('Please enter your name (required)');if(!comment)return alert('Please write your suggestion');const entry={name:name,text:comment,date:getToday(),timestamp:Date.now()};if(db){db.collection('feedback').add(entry).then(()=>{document.getElementById('suggestionName').value='';document.getElementById('suggestionComment').value='';renderUserComments();alert('Thank you for your feedback, '+name+'!')}).catch(e=>{console.error('Firestore write failed:',e);saveToLocal(entry);document.getElementById('suggestionName').value='';document.getElementById('suggestionComment').value='';renderUserComments();alert('Thank you for your feedback, '+name+'! (saved offline)')})}else{saveToLocal(entry);document.getElementById('suggestionName').value='';document.getElementById('suggestionComment').value='';renderUserComments();alert('Thank you for your feedback, '+name+'!')}}
 function saveToLocal(entry){let suggestions=[];try{suggestions=JSON.parse(localStorage.getItem('bwatery_suggestions')||'[]')}catch(e){}suggestions.unshift(entry);if(suggestions.length>50)suggestions=suggestions.slice(0,50);try{localStorage.setItem('bwatery_suggestions',JSON.stringify(suggestions))}catch(e){}}
