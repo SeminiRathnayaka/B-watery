@@ -425,6 +425,31 @@
         <span class="setting-label">Bedtime<small>When your day ends</small></span>
         <input type="time" class="settings-goal-input" id="settingsBedTime" value="23:00" onchange="updateBedTime(this.value)" style="width:100px">
       </div>
+      <div class="setting-section-title">Water Drop Sound</div>
+      <div class="setting-item" style="flex-direction:column;align-items:stretch;gap:10px">
+        <div class="sound-list" id="soundList">
+          <div class="sound-item active" data-sound="0" onclick="selectSound(0)">
+            <span class="sound-icon">💧</span>
+            <div class="sound-info"><b>Classic Drop</b><small>Crisp sine tone 800-400Hz</small></div>
+            <button class="sound-test-btn" onclick="event.stopPropagation();testSound(0)">▶</button>
+          </div>
+          <div class="sound-item" data-sound="1" onclick="selectSound(1)">
+            <span class="sound-icon">🌊</span>
+            <div class="sound-info"><b>Deep Splash</b><small>Bass sine tone 1200-300Hz</small></div>
+            <button class="sound-test-btn" onclick="event.stopPropagation();testSound(1)">▶</button>
+          </div>
+          <div class="sound-item" data-sound="2" onclick="selectSound(2)">
+            <span class="sound-icon">🫧</span>
+            <div class="sound-info"><b>Bouncy Plop</b><small>Triangle wave 600-900Hz</small></div>
+            <button class="sound-test-btn" onclick="event.stopPropagation();testSound(2)">▶</button>
+          </div>
+          <div class="sound-item" data-sound="3" onclick="selectSound(3)">
+            <span class="sound-icon">💦</span>
+            <div class="sound-info"><b>Dual Ripple</b><small>Two-tone rich water sound</small></div>
+            <button class="sound-test-btn" onclick="event.stopPropagation();testSound(3)">▶</button>
+          </div>
+        </div>
+      </div>
       <div class="setting-section-title">Data</div>
       <div class="setting-item">
         <span class="setting-label">Reset Today<small>Manually clear your intake</small></span>

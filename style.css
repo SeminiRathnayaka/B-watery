@@ -443,3 +443,14 @@ button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-vis
 .onboard-slide.active .bounce-in{animation:bounceIn .5s ease .1s both}
 .onboard-slide.active .fade-up{animation:fadeUp .4s ease .25s both}
 .onboard-slide.active .fade-up-delay{animation:fadeUp .4s ease .4s both}
+
+.sound-list{display:flex;flex-direction:column;gap:8px;width:100%}
+.sound-item{display:flex;align-items:center;gap:12px;padding:10px 12px;border-radius:var(--radius-sm);border:2px solid var(--border);background:var(--surface-1);cursor:pointer;transition:all .2s ease;min-height:52px}
+.sound-item:active{transform:scale(.98)}
+.sound-item.active{border-color:var(--primary);background:rgba(46,156,202,.08)}
+.sound-icon{font-size:24px;flex-shrink:0;width:36px;text-align:center}
+.sound-info{flex:1;display:flex;flex-direction:column;gap:1px}
+.sound-info b{font-size:13px;color:var(--text)}
+.sound-info small{font-size:11px;color:var(--text-secondary)}
+.sound-test-btn{width:36px;height:36px;border-radius:50%;border:2px solid var(--border);background:var(--card-bg);color:var(--text);font-size:14px;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all .2s ease}
+.sound-test-btn:active{transform:scale(.9);background:var(--primary);color:#fff;border-color:var(--primary)}
