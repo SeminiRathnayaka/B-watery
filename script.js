@@ -92,12 +92,12 @@ function checkMidnightReset(){const t=getToday();if(state.lastDate&&state.lastDa
 function hideAllScreens(){document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'))}
 function activateNav(id){document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));const i=document.querySelector('.nav-item[data-screen="'+id+'"]');if(i)i.classList.add('active')}
 
-const navScreens=['screen-dashboard','screen-stats','screen-calendar','screen-history','screen-achievements','screen-settings','screen-tips','screen-about'];
+const navScreens=['screen-dashboard','screen-stats','screen-history','screen-achievements','screen-settings','screen-tips','screen-about'];
 const noBackScreens=['screen-dashboard','screen-splash','screen-onboarding','screen-setgoal','screen-loading'];
 let screenHistory=[];
 function showScreen(id,skipPush){
   hideAllScreens();document.getElementById(id).classList.add('active');activateNav(id);
-  if(id==='screen-history')renderHistory();if(id==='screen-stats')renderStats();if(id==='screen-achievements')renderAchievements();if(id==='screen-calendar')renderCalendar();
+  if(id==='screen-history')renderHistory();if(id==='screen-stats'){renderStats();renderCalendar()}if(id==='screen-achievements')renderAchievements();
   if(id==='screen-dashboard'){renderAll();fetchWeather()}
   if(id==='screen-settings'){renderUserGreeting();renderUserComments()}
   const nav=document.getElementById('bottomNav');

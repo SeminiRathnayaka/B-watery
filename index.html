@@ -268,6 +268,15 @@
         <div style="text-align:center"><div style="font-size:26px;font-weight:700;color:var(--success)" id="monthlyGoalMet">0</div><div style="font-size:12px;color:var(--text-secondary)">Goals met</div></div>
       </div>
     </div>
+    <div class="dash-card">
+      <h3 id="calendarMonth">August 2026</h3>
+      <div class="calendar-grid" id="calendarGrid"></div>
+      <div style="display:flex;gap:16px;justify-content:center;margin-top:12px;font-size:11px;color:var(--text-secondary)">
+        <span style="display:flex;align-items:center;gap:4px"><span style="width:12px;height:12px;border-radius:3px;background:rgba(0,184,148,.2);display:inline-block"></span> Goal met</span>
+        <span style="display:flex;align-items:center;gap:4px"><span style="width:12px;height:12px;border-radius:3px;background:rgba(255,107,107,.15);display:inline-block"></span> Missed</span>
+        <span style="display:flex;align-items:center;gap:4px"><span style="width:12px;height:12px;border-radius:3px;border:2px solid var(--primary);display:inline-block"></span> Today</span>
+      </div>
+    </div>
   </div>
 
   <!-- ACHIEVEMENTS -->
@@ -276,20 +285,6 @@
       <div class="meditation-wrap"><img src="meditation.svg" alt="" class="meditation-illu lg"></div>
       <h3>Achievements</h3>
       <div class="achievements-grid" id="achievementsGrid"></div>
-    </div>
-  </div>
-
-  <!-- CALENDAR -->
-  <div class="screen" id="screen-calendar">
-    <div class="dash-card">
-      <div class="meditation-wrap"><img src="meditation.svg" alt="" class="meditation-illu md"></div>
-      <h3 id="calendarMonth">August 2026</h3>
-      <div class="calendar-grid" id="calendarGrid"></div>
-      <div style="display:flex;gap:16px;justify-content:center;margin-top:12px;font-size:11px;color:var(--text-secondary)">
-        <span style="display:flex;align-items:center;gap:4px"><span style="width:12px;height:12px;border-radius:3px;background:rgba(0,184,148,.2);display:inline-block"></span> Goal met</span>
-        <span style="display:flex;align-items:center;gap:4px"><span style="width:12px;height:12px;border-radius:3px;background:rgba(255,107,107,.15);display:inline-block"></span> Missed</span>
-        <span style="display:flex;align-items:center;gap:4px"><span style="width:12px;height:12px;border-radius:3px;border:2px solid var(--primary);display:inline-block"></span> Today</span>
-      </div>
     </div>
   </div>
 
@@ -530,10 +525,6 @@
   <button class="nav-item" data-screen="screen-stats" onclick="showScreen('screen-stats')">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
     <span>Stats</span>
-  </button>
-  <button class="nav-item" data-screen="screen-calendar" onclick="showScreen('screen-calendar')">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
-    <span>Calendar</span>
   </button>
   <button class="nav-item" data-screen="screen-history" onclick="showScreen('screen-history')">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
