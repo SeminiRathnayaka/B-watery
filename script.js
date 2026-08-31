@@ -189,7 +189,7 @@ async function fetchWeather(){const badge=document.getElementById('tempBadge');i
 function toggleWeatherBoost(){state.weatherBoost=!state.weatherBoost;document.getElementById('weatherToggle').classList.toggle('on',state.weatherBoost);saveState();if(state._weatherBoosted){state.dailyGoal-=500;state._weatherBoosted=false;const g=document.getElementById('settingsGoal');if(g)g.value=state.dailyGoal/1000;if(state.currentIntake>state.dailyGoal)state.currentIntake=state.dailyGoal;saveToday();saveState();renderAll()}document.getElementById('weatherBanner').classList.remove('show');if(state.weatherBoost)fetchWeather();saveUserData()}
 
 function toggleDarkMode(){state.darkMode=!state.darkMode;applyDarkMode();saveState();saveUserData()}
-function applyDarkMode(){document.documentElement.classList.toggle('dark-mode',state.darkMode);const t=document.getElementById('darkToggle');if(t)t.classList.toggle('on',state.darkMode)}
+function applyDarkMode(){document.documentElement.classList.toggle('dark-mode',state.darkMode);const t=document.getElementById('darkToggle');if(t)t.classList.toggle('on',state.darkMode);try{if(window.Android){Android.setStatusBar(state.darkMode?'#0A1628':'#FFFFFF',!state.darkMode)}}catch(e){}}
 
 function updateGoal(val){const n=Math.round(parseFloat(val)*1000);if(n>=500){state.dailyGoal=state._weatherBoosted?n+500:n;if(state.currentIntake>state.dailyGoal)state.currentIntake=state.dailyGoal;saveToday();saveState();renderAll();saveUserData()}}
 function updateReminder(val){state.reminderInterval=parseInt(val);saveState();if(state.reminderTimer)clearInterval(state.reminderTimer);if(state.reminderInterval>0)startReminderTimer();saveUserData()}
