@@ -470,6 +470,8 @@ button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-vis
 .mention-option{padding:8px 12px;cursor:pointer;font-size:13px;color:var(--text);transition:background .15s}
 .mention-option:active{background:var(--surface-1);color:var(--primary)}
 .user-comments-empty{text-align:center;color:var(--text-muted);font-size:13px;padding:20px 0}
+.expand-comments-btn{width:100%;padding:10px;border-radius:var(--radius-sm);border:1px dashed var(--border);background:transparent;color:var(--text-secondary);font-size:12px;font-weight:500;cursor:pointer;font-family:inherit;transition:all .2s;margin-top:8px}
+.expand-comments-btn:active{background:var(--surface-1);color:var(--primary);border-color:var(--primary)}
 
 .sound-list{display:flex;flex-direction:column;gap:8px;width:100%}
 .sound-item{display:flex;align-items:center;gap:12px;padding:10px 12px;border-radius:var(--radius-sm);border:2px solid var(--border);background:var(--surface-1);cursor:pointer;transition:all .2s ease;min-height:52px}
