@@ -213,18 +213,6 @@ body{font-family:'Poppins',sans-serif;background:var(--bg);background-image:radi
 .suggestion-form .form-group input,.suggestion-form .form-group textarea{font-size:14px;padding:10px 14px}
 .suggestion-form textarea{min-height:70px;resize:vertical}
 
-.user-comments-wrap{width:100%;max-width:440px;overflow:hidden;background:rgba(0,184,148,.06);border-radius:var(--radius-xs);padding:10px 0;margin:8px 0;position:relative}
-.user-comments-wrap::before,.user-comments-wrap::after{content:'';position:absolute;top:0;bottom:0;width:30px;z-index:2;pointer-events:none}
-.user-comments-wrap::before{left:0;background:linear-gradient(90deg,var(--card-bg),transparent)}
-.user-comments-wrap::after{right:0;background:linear-gradient(-90deg,var(--card-bg),transparent)}
-.dark-mode .user-comments-wrap{background:rgba(0,184,148,.08)}
-.user-comments-inner{display:flex;gap:40px;animation:tickerScroll 25s linear infinite;white-space:nowrap;width:max-content}
-.user-comments-inner:hover{animation-play-state:paused}
-.user-comment-item{font-size:12px;color:var(--text-secondary);display:flex;align-items:center;gap:6px;flex-shrink:0;max-width:300px}
-.user-comment-item .comment-name{font-weight:600;color:var(--success);white-space:nowrap}
-.user-comment-item .comment-text{overflow:hidden;text-overflow:ellipsis}
-.user-comments-empty{font-size:12px;color:var(--text-muted);text-align:center;padding:8px 16px}
-
 .settings-user-greeting{display:flex;align-items:center;gap:10px;padding:12px 16px;background:linear-gradient(135deg,rgba(46,156,202,.08),rgba(46,156,202,.03));border-radius:var(--radius-xs);margin-bottom:12px}
 .settings-user-greeting .user-avatar{width:40px;height:40px;border-radius:50%;background:var(--primary);color:#fff;display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:700;flex-shrink:0}
 .settings-user-greeting .user-info{flex:1}
@@ -342,8 +330,6 @@ button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-vis
   .settings-user-greeting .user-info .greeting-text{font-size:13px}
   .suggestion-form .form-group{margin-bottom:10px}
   .suggestion-form textarea{min-height:60px}
-  .user-comments-wrap{margin:6px 0}
-  .user-comment-item{font-size:11px;max-width:240px}
 }
 @media(max-width:360px){
   .app-container{padding:8px 8px calc(var(--nav-height) + 6px)}
@@ -423,7 +409,6 @@ button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-vis
   .stats-row{max-width:500px}
   .weather-banner{max-width:500px}
   .ux-ticker{max-width:1100px}
-  .user-comments-wrap{max-width:1100px}
 }
 
 .calendar-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;width:100%;margin-top:12px}
