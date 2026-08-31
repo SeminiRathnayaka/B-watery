@@ -99,7 +99,7 @@ function showScreen(id,skipPush){
   hideAllScreens();document.getElementById(id).classList.add('active');activateNav(id);
   if(id==='screen-history')renderHistory();if(id==='screen-stats'){renderStats();renderCalendar()}if(id==='screen-achievements')renderAchievements();
   if(id==='screen-dashboard'){renderAll();fetchWeather()}
-  if(id==='screen-settings'){renderUserGreeting();renderUserComments();loadRating()}
+  if(id==='screen-settings'){renderUserGreeting();renderUserComments();loadRating();showDevOptions()}
   const nav=document.getElementById('bottomNav');
   if(nav)nav.style.display=navScreens.includes(id)?'flex':'none';
   if(!skipPush){screenHistory.push(id);try{history.pushState({screen:id},'',location.href)}catch(e){}}
@@ -126,6 +126,8 @@ function showLoadingScreen(){const load=document.getElementById('loadingScreen')
 
 function addWater(ml){state.currentIntake=Math.min(state.currentIntake+ml,state.dailyGoal);closeAddModal();saveToday();saveState();renderAll();checkAchievements();splashEffect();saveUserData()}
 function clearAllData(){if(!confirm('This will delete ALL your data (history, settings, achievements). Continue?'))return;try{Object.keys(localStorage).forEach(k=>{if(k.startsWith('bwatery_')&&k!=='bwatery_suggestions'&&k!=='bwatery_welcomed')localStorage.removeItem(k)})}catch(e){}state.gender=null;state.age=null;state.weight=null;state.dailyGoal=3000;state.currentIntake=0;state.darkMode=false;state.reminderInterval=30;state.weatherBoost=true;state.lastDate=null;state._weatherBoosted=false;state.onboarded=false;state.userName='';state.soundEnabled=true;state.wakeTime='07:00';state.bedTime='23:00';state.reminderMode='sound';state.remindAfterGoal=false;state.unit='ml';state.defaultCup=250;state.language='en';saveState();applyDarkMode();showScreen('screen-onboarding')}
+function clearAllFeedback(){if(!isDev())return alert('Only the developer can clear feedback.');if(!confirm('DELETE ALL feedback from everyone? This cannot be undone!'))return;if(db){db.collection('feedback').get().then(snap=>{const batch=db.batch();snap.forEach(doc=>batch.delete(doc.ref));return batch.commit()}).then(()=>{try{localStorage.removeItem('bwatery_suggestions')}catch(e){}renderUserComments();alert('All feedback cleared!')}).catch(e=>{console.error('Clear failed:',e);alert('Failed to clear feedback.')})}else{try{localStorage.removeItem('bwatery_suggestions')}catch(e){}renderUserComments();alert('All feedback cleared!')}}
+function showDevOptions(){const el=document.getElementById('clearFeedbackItem');if(el&&isDev())el.style.display='flex'}
 function splashEffect(){const w=document.querySelector('.hero-bubble-wrap');if(!w)return;const r=document.createElement('div');r.style.cssText='position:absolute;top:50%;left:50%;width:20px;height:20px;border:3px solid var(--primary-light);border-radius:50%;transform:translate(-50%,-50%);opacity:.8;pointer-events:none;animation:rippleOut .6s ease-out forwards;z-index:10';w.appendChild(r);setTimeout(()=>r.remove(),650)}
 function customAdd(){const v=document.getElementById('customWaterInput').value;const n=parseInt(v);if(!n||n<=0)return alert('Enter a valid amount');addWater(n);document.getElementById('customWaterInput').value=''}
 function showAddModal(){document.getElementById('addWaterModal').classList.add('active')}
