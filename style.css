@@ -233,9 +233,13 @@ body{font-family:'Poppins',sans-serif;background:var(--bg);background-image:radi
 .dark-mode .settings-user-greeting{background:linear-gradient(135deg,rgba(46,156,202,.12),rgba(46,156,202,.04))}
 
 .rate-wrap{display:flex;gap:8px;margin-bottom:8px}
-.rate-star{font-size:28px;cursor:pointer;transition:transform .2s;color:#DDD}
+.rate-star{font-size:28px;cursor:pointer;transition:transform .2s,color .3s;color:#DDD}
 .rate-star.filled{color:var(--warning)}
 .rate-star:active{transform:scale(1.2)}
+.rating-bar-wrap{display:flex;align-items:center;gap:10px;width:100%}
+.rating-bar-bg{flex:1;height:8px;border-radius:4px;background:var(--border);overflow:hidden}
+.rating-bar-fill{height:100%;border-radius:4px;background:linear-gradient(90deg,var(--danger),var(--warning),var(--success));transition:width .4s ease}
+.rating-pct{font-size:14px;font-weight:700;color:var(--warning);min-width:40px;text-align:right}
 
 .footer-dev{text-align:center;padding:20px 0 8px;border-top:1px solid var(--border);margin-top:12px}
 .dark-mode .footer-dev{border-color:#2D3561}
