@@ -258,10 +258,28 @@ function renderCalendar(){
   }
 }
 
+let currentSlide=0;
+const totalSlides=4;
+function showSlide(n){
+  const slides=document.querySelectorAll('.onboard-slide');
+  const dots=document.querySelectorAll('.onboard-dot');
+  const btn=document.getElementById('onboardBtn');
+  slides.forEach((s,i)=>{
+    s.classList.remove('active','exit-left');
+    if(i===n)s.classList.add('active');
+    else if(i<n)s.classList.add('exit-left');
+  });
+  dots.forEach((d,i)=>d.classList.toggle('active',i===n));
+  if(btn)btn.textContent=n===totalSlides-1?'Get Started':'Next';
+}
+function nextSlide(){
+  if(currentSlide<totalSlides-1){currentSlide++;showSlide(currentSlide)}
+  else dismissWelcome();
+}
 function showWelcomeScreen(){
   if(localStorage.getItem('bwatery_welcomed'))return false;
   const screen=document.getElementById('screen-welcome');
-  if(screen){screen.classList.add('active');return true}
+  if(screen){screen.classList.add('active');currentSlide=0;showSlide(0);return true}
   return false;
 }
 function dismissWelcome(){

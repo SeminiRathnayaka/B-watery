@@ -19,35 +19,38 @@
   <div class="splash-sub">Stay hydrated, stay healthy</div>
 </div>
 
-<!-- WELCOME SCREEN -->
-<div class="screen" id="screen-welcome" style="background:var(--bg)">
-  <div class="onboarding-card" style="max-width:380px">
-    <div class="meditation-wrap"><img src="meditation.svg" alt="" class="meditation-illu lg"></div>
-    <h2 class="brand" style="color:var(--primary);margin-bottom:4px">Welcome to BWATERY</h2>
-    <p style="color:var(--text-secondary);font-size:13px;margin-bottom:20px">Your personal hydration companion</p>
-    <div style="text-align:left;margin-bottom:20px">
-      <div style="display:flex;gap:10px;align-items:flex-start;margin-bottom:14px">
-        <span style="font-size:24px;flex-shrink:0">💧</span>
-        <div><b style="font-size:14px;color:var(--text)">Track Your Water</b><p style="font-size:12px;color:var(--text-secondary);margin-top:2px">Log every sip with a tap. Choose cups, bottles, or type a custom amount.</p></div>
+<!-- WELCOME SCREEN - ONBOARDING SLIDES -->
+<div class="screen" id="screen-welcome">
+  <div class="onboard-container">
+    <div class="onboard-slides" id="onboardSlides">
+      <div class="onboard-slide active" data-slide="0">
+        <div class="onboard-icon-wrap"><div class="onboard-icon bounce-in">💧</div></div>
+        <h2 class="onboard-title fade-up">Track Every Sip</h2>
+        <p class="onboard-desc fade-up-delay">Log water with a single tap. Choose cups, bottles, or type a custom amount — it's that easy.</p>
       </div>
-      <div style="display:flex;gap:10px;align-items:flex-start;margin-bottom:14px">
-        <span style="font-size:24px;flex-shrink:0">🎯</span>
-        <div><b style="font-size:14px;color:var(--text)">Smart Daily Goal</b><p style="font-size:12px;color:var(--text-secondary);margin-top:2px">Auto-calculated from your weight, age, and gender. Adjusts for hot weather.</p></div>
+      <div class="onboard-slide" data-slide="1">
+        <div class="onboard-icon-wrap"><div class="onboard-icon bounce-in">🎯</div></div>
+        <h2 class="onboard-title fade-up">Smart Daily Goal</h2>
+        <p class="onboard-desc fade-up-delay">Auto-calculated from your weight, age, and gender. Adjusts for hot weather to keep you perfectly hydrated.</p>
       </div>
-      <div style="display:flex;gap:10px;align-items:flex-start;margin-bottom:14px">
-        <span style="font-size:24px;flex-shrink:0">🔔</span>
-        <div><b style="font-size:14px;color:var(--text)">Gentle Reminders</b><p style="font-size:12px;color:var(--text-secondary);margin-top:2px">Sound, vibration, or notifications — only during your awake hours.</p></div>
+      <div class="onboard-slide" data-slide="2">
+        <div class="onboard-icon-wrap"><div class="onboard-icon bounce-in">🔔</div></div>
+        <h2 class="onboard-title fade-up">Gentle Reminders</h2>
+        <p class="onboard-desc fade-up-delay">Sound, vibration, or notifications — only during your awake hours so you're never disturbed at night.</p>
       </div>
-      <div style="display:flex;gap:10px;align-items:flex-start;margin-bottom:14px">
-        <span style="font-size:24px;flex-shrink:0">📊</span>
-        <div><b style="font-size:14px;color:var(--text)">Stats & Calendar</b><p style="font-size:12px;color:var(--text-secondary);margin-top:2px">Weekly charts, streaks, history, and a calendar to see your progress.</p></div>
-      </div>
-      <div style="display:flex;gap:10px;align-items:flex-start">
-        <span style="font-size:24px;flex-shrink:0">🏆</span>
-        <div><b style="font-size:14px;color:var(--text)">Achievements</b><p style="font-size:12px;color:var(--text-secondary);margin-top:2px">Unlock badges as you build healthy hydration habits.</p></div>
+      <div class="onboard-slide" data-slide="3">
+        <div class="onboard-icon-wrap"><div class="onboard-icon bounce-in">🏆</div></div>
+        <h2 class="onboard-title fade-up">Earn Achievements</h2>
+        <p class="onboard-desc fade-up-delay">Unlock badges, track streaks, and watch your progress grow on the calendar. Build healthy habits that stick.</p>
       </div>
     </div>
-    <button class="btn-primary" onclick="dismissWelcome()">Get Started</button>
+    <div class="onboard-dots" id="onboardDots">
+      <span class="onboard-dot active"></span>
+      <span class="onboard-dot"></span>
+      <span class="onboard-dot"></span>
+      <span class="onboard-dot"></span>
+    </div>
+    <button class="btn-primary onboard-btn" id="onboardBtn" onclick="nextSlide()">Next</button>
   </div>
 </div>
 

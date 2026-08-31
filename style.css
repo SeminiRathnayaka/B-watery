@@ -425,4 +425,21 @@ button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-vis
 .calendar-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;width:100%;margin-top:12px}
 .calendar-grid>div:not(:nth-child(-n+7)){min-height:36px}
 
-#screen-welcome.active{justify-content:center;min-height:100vh;padding:16px}
+.onboard-container{width:100%;max-width:420px;display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:100vh;padding:24px 20px;position:relative;overflow:hidden}
+.onboard-slides{width:100%;position:relative;height:340px}
+.onboard-slide{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;opacity:0;transform:translateX(60px);transition:all .4s ease;pointer-events:none}
+.onboard-slide.active{opacity:1;transform:translateX(0);pointer-events:auto}
+.onboard-slide.exit-left{opacity:0;transform:translateX(-60px);pointer-events:none}
+.onboard-icon-wrap{width:120px;height:120px;border-radius:50%;background:rgba(46,156,202,.12);display:flex;align-items:center;justify-content:center;margin-bottom:28px;position:relative}
+.onboard-icon{font-size:56px;line-height:1}
+.onboard-title{font-size:24px;font-weight:700;color:var(--text);text-align:center;margin-bottom:12px;font-family:'Fredoka',sans-serif}
+.onboard-desc{font-size:14px;color:var(--text-secondary);text-align:center;line-height:1.6;max-width:300px;padding:0 8px}
+.onboard-dots{display:flex;gap:8px;margin:24px 0 20px}
+.onboard-dot{width:8px;height:8px;border-radius:50%;background:var(--border);transition:all .3s ease}
+.onboard-dot.active{background:var(--primary);width:24px;border-radius:4px}
+.onboard-btn{width:100%;max-width:300px;padding:14px 24px;border-radius:14px;font-size:16px;font-weight:600}
+@keyframes bounceIn{0%{transform:scale(0);opacity:0}50%{transform:scale(1.15)}70%{transform:scale(.95)}100%{transform:scale(1);opacity:1}}
+@keyframes fadeUp{0%{transform:translateY(20px);opacity:0}100%{transform:translateY(0);opacity:1}}
+.onboard-slide.active .bounce-in{animation:bounceIn .5s ease .1s both}
+.onboard-slide.active .fade-up{animation:fadeUp .4s ease .25s both}
+.onboard-slide.active .fade-up-delay{animation:fadeUp .4s ease .4s both}
