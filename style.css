@@ -424,3 +424,5 @@ button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-vis
 
 .calendar-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;width:100%;margin-top:12px}
 .calendar-grid>div:not(:nth-child(-n+7)){min-height:36px}
+
+#screen-welcome.active{justify-content:center;min-height:100vh;padding:16px}

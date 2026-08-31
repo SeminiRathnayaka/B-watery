@@ -38,7 +38,6 @@ const ACHIEVEMENTS=[
 ];
 
 function init(){
-  setTimeout(()=>{document.getElementById('splash').classList.add('hide');setTimeout(()=>{document.getElementById('splash').style.display='none'},600)},2000);
   loadState();applyDarkMode();
   const st=document.getElementById('soundToggle');if(st)st.classList.toggle('on',state.soundEnabled);
   if(auth){
@@ -268,9 +267,10 @@ function showWelcomeScreen(){
 function dismissWelcome(){
   try{localStorage.setItem('bwatery_welcomed','1')}catch(e){}
   hideAllScreens();
-  if(state.onboarded){showScreen('screen-dashboard');renderAll();fetchStats();fetchWeather();checkAchievements();renderUserGreeting();renderUserComments()}
-  else{showScreen('screen-onboarding')}
+  init();
 }
-
 document.addEventListener('keydown',function(e){if(e.key==='Escape'){closeAddModal();dismissReminder()}});
-document.addEventListener('DOMContentLoaded',function(){if(!showWelcomeScreen())init()});
+document.addEventListener('DOMContentLoaded',function(){
+  setTimeout(()=>{document.getElementById('splash').classList.add('hide');setTimeout(()=>{document.getElementById('splash').style.display='none'},600)},2000);
+  if(!showWelcomeScreen())init();
+});
