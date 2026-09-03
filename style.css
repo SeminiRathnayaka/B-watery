@@ -67,13 +67,13 @@ body{font-family:'Poppins',sans-serif;background:var(--bg);background-image:radi
 .goal-display .value{font-size:32px;font-weight:700;color:var(--primary)}
 .goal-display .label{font-size:12px;color:var(--text-secondary)}
 
-.stats-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;width:100%;max-width:440px;margin-bottom:12px;align-self:flex-start;margin-left:8px;margin-top:14px}
-.stat-card{background:var(--card-bg);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border:1px solid rgba(255,255,255,.3);border-radius:var(--radius-sm);padding:14px 10px;box-shadow:var(--shadow);text-align:center}
+.stats-row{display:grid;grid-template-columns:1fr 1fr;gap:8px;width:100%;max-width:440px;margin-bottom:10px;align-self:flex-start;margin-left:8px;margin-top:10px}
+.stat-card{background:var(--card-bg);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border:1px solid rgba(255,255,255,.3);border-radius:var(--radius-xs);padding:10px 8px;box-shadow:var(--shadow);text-align:center}
 .stat-card:nth-child(1){animation:statFloat 5s ease-in-out infinite}
 .stat-card:nth-child(2){animation:statFloat 5s ease-in-out .4s infinite}
 .dark-mode .stat-card{border-color:rgba(46,156,202,.12)}
-.stat-card .stat-label{font-size:11px;color:var(--text-secondary);margin-bottom:4px}
-.stat-card .stat-value{font-size:20px;font-weight:700}
+.stat-card .stat-label{font-size:10px;color:var(--text-secondary);margin-bottom:2px}
+.stat-card .stat-value{font-size:16px;font-weight:700}
 .stat-card.accent{background:rgba(46,156,202,.08)}
 .stat-card.accent .stat-value{color:var(--primary)}
 
